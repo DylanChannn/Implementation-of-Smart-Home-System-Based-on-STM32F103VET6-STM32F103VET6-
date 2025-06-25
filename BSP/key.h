@@ -1,18 +1,18 @@
 /****************************************************************************************************
  * @file        key.h
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-18
- * @brief       °´¼ü¿ØÖÆÍ·ÎÄ¼þ£º¶¨Òå°´¼ü×´Ì¬¼°½Ó¿Úº¯Êý
- * @details     ±¾ÎÄ¼þ°üº¬£º
- *              - °´¼ü×´Ì¬Ã¶¾Ù¶¨Òå(Key_Idle/Key_Down/Key_Up)
- *              - ËÄ¸ö¶ÀÁ¢°´¼üµÄ³õÊ¼»¯º¯ÊýÉùÃ÷
- *              - ËÄ¸ö¶ÀÁ¢°´¼üµÄ×´Ì¬É¨Ãèº¯ÊýÉùÃ÷
- * @note        °´¼üÌØÐÔËµÃ÷£º
- *              - KEY1(PC2): ¸¡¿ÕÊäÈë£¬°´ÏÂÎªµÍµçÆ½
- *              - KEY2(PC3): ¸¡¿ÕÊäÈë£¬°´ÏÂÎª¸ßµçÆ½
- *              - KEY3(PA0): ÉÏÀ­ÊäÈë£¬°´ÏÂÎªµÍµçÆ½
- *              - KEY4(PA1): ÏÂÀ­ÊäÈë£¬°´ÏÂÎª¸ßµçÆ½
+ * @brief       æŒ‰é”®æŽ§åˆ¶å¤´æ–‡ä»¶ï¼šå®šä¹‰æŒ‰é”®çŠ¶æ€åŠæŽ¥å£å‡½æ•°
+ * @details     æœ¬æ–‡ä»¶åŒ…å«ï¼š
+ *              - æŒ‰é”®çŠ¶æ€æžšä¸¾å®šä¹‰(Key_Idle/Key_Down/Key_Up)
+ *              - å››ä¸ªç‹¬ç«‹æŒ‰é”®çš„åˆå§‹åŒ–å‡½æ•°å£°æ˜Ž
+ *              - å››ä¸ªç‹¬ç«‹æŒ‰é”®çš„çŠ¶æ€æ‰«æå‡½æ•°å£°æ˜Ž
+ * @note        æŒ‰é”®ç‰¹æ€§è¯´æ˜Žï¼š
+ *              - KEY1(PC2): æµ®ç©ºè¾“å…¥ï¼ŒæŒ‰ä¸‹ä¸ºä½Žç”µå¹³
+ *              - KEY2(PC3): æµ®ç©ºè¾“å…¥ï¼ŒæŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
+ *              - KEY3(PA0): ä¸Šæ‹‰è¾“å…¥ï¼ŒæŒ‰ä¸‹ä¸ºä½Žç”µå¹³
+ *              - KEY4(PA1): ä¸‹æ‹‰è¾“å…¥ï¼ŒæŒ‰ä¸‹ä¸ºé«˜ç”µå¹³
  ****************************************************************************************************
  */
 #ifndef _KEY_H
@@ -26,13 +26,13 @@ typedef enum {
 	Key_Up
 }_Key_State;
 
-/* °´¼ü³õÊ¼»¯º¯Êý */
-void Key1_Init(void);  // PC2: ¸¡¿ÕÊäÈë-µã»÷µÍµçÆ½
-void Key2_Init(void);  // PC3: ¸¡¿ÕÊäÈë-µã»÷¸ßµçÆ½
-void Key3_Init(void);  // PA0: ÉÏÀ­ÊäÈë-µã»÷µÍµçÆ½
-void Key4_Init(void);  // PA1: ÏÂÀ­ÊäÈë-µã»÷¸ßµçÆ½
+/* æŒ‰é”®åˆå§‹åŒ–å‡½æ•° */
+void Key1_Init(void);  // PC2: æµ®ç©ºè¾“å…¥-ç‚¹å‡»ä½Žç”µå¹³
+void Key2_Init(void);  // PC3: æµ®ç©ºè¾“å…¥-ç‚¹å‡»é«˜ç”µå¹³
+void Key3_Init(void);  // PA0: ä¸Šæ‹‰è¾“å…¥-ç‚¹å‡»ä½Žç”µå¹³
+void Key4_Init(void);  // PA1: ä¸‹æ‹‰è¾“å…¥-ç‚¹å‡»é«˜ç”µå¹³
 
-/* °´¼üÉ¨Ãèº¯Êý */
+/* æŒ‰é”®æ‰«æå‡½æ•° */
 uint8_t Key1_Scan(void);
 uint8_t Key2_Scan(void);
 uint8_t Key3_Scan(void);
