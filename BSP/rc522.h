@@ -1,10 +1,10 @@
 /**
  ****************************************************************************************************
  * @file        rc522.h
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-23
- * @brief       RC522¿¨Æ¬¹ÜÀíÏà¹Ø´úÂëÍ·ÎÄ¼ş
+ * @brief       RC522å¡ç‰‡ç®¡ç†ç›¸å…³ä»£ç å¤´æ–‡ä»¶
  ****************************************************************************************************
  */
  
@@ -14,13 +14,13 @@
 #include "Delay.h"
 #include "math.h"
  
-/*********************************** RC522 Òı½Å¶¨Òå *********************************************/
-/*  Òı½Åºê¶¨Òå
+/*********************************** RC522 å¼•è„šå®šä¹‰ *********************************************/
+/*  å¼•è„šå®å®šä¹‰
  *	SDA(CS)---PD7
  *	SCK---PB3
  *	MOSI--PB5
  *	MISO--PB4
- *	¿Õ
+ *	ç©º
  *	GND--GND
  *	RST---PB6
  *	3.3V-3.3V
@@ -59,7 +59,7 @@
 
 void MFRC522_Init(void);
 
-/********************************* ¿¨Æ¬¹ÜÀíÏà¹ØÉùÃ÷ *******************************************/
+/********************************* å¡ç‰‡ç®¡ç†ç›¸å…³å£°æ˜ *******************************************/
 #define MAX_SAVED_CARDS 5
 char Save_Card(unsigned char *cardName);
 char Delete_Card(unsigned char *cardName);
@@ -69,16 +69,16 @@ extern unsigned char savedCards[MAX_SAVED_CARDS][6];
 extern unsigned char savedCardCount;
 char RC522_DetectCard(unsigned char *serial);
 
-/* ¿¨Æ¬¼ì²â×´Ì¬ */
+/* å¡ç‰‡æ£€æµ‹çŠ¶æ€ */
 typedef enum {
-    CARD_NONE,      // Î´¼ì²âµ½¿¨Æ¬
-    CARD_DETECTED,  // ¼ì²âµ½ÓĞĞ§¿¨Æ¬
-    CARD_ERROR      // ¼ì²â´íÎó
+    CARD_NONE,      // æœªæ£€æµ‹åˆ°å¡ç‰‡
+    CARD_DETECTED,  // æ£€æµ‹åˆ°æœ‰æ•ˆå¡ç‰‡
+    CARD_ERROR      // æ£€æµ‹é”™è¯¯
 } CardDetectStatus;
-extern unsigned char cardSerial[4];		// ¿¨Æ¬ĞòÁĞºÅ
-extern CardDetectStatus cardStatus;		// ¿¨Æ¬¼ì²â×´Ì¬
+extern unsigned char cardSerial[4];		// å¡ç‰‡åºåˆ—å·
+extern CardDetectStatus cardStatus;		// å¡ç‰‡æ£€æµ‹çŠ¶æ€
 
-/* ¿¨Æ¬¼ì²âº¯Êı */
+/* å¡ç‰‡æ£€æµ‹å‡½æ•° */
 void RC522_PeriodicCheck(void);
 CardDetectStatus GetCardDetectStatus(void);
 const char* GetCardStatusString(void);
@@ -86,42 +86,42 @@ char RC522_SingleDetectCard(unsigned char *serial);
 
 /*********************************************************************************************/
 /////////////////////////////////////////////////////////////////////
-//MF522ÃüÁî×Ö
+//MF522å‘½ä»¤å­—
 /////////////////////////////////////////////////////////////////////
-#define PCD_IDLE              0x00               //È¡Ïûµ±Ç°ÃüÁî
-#define PCD_AUTHENT           0x0E               //ÑéÖ¤ÃÜÔ¿
-#define PCD_RECEIVE           0x08               //½ÓÊÕÊı¾İ
-#define PCD_TRANSMIT          0x04               //·¢ËÍÊı¾İ
-#define PCD_TRANSCEIVE        0x0C               //·¢ËÍ²¢½ÓÊÕÊı¾İ
-#define PCD_RESETPHASE        0x0F               //¸´Î»
+#define PCD_IDLE              0x00               //å–æ¶ˆå½“å‰å‘½ä»¤
+#define PCD_AUTHENT           0x0E               //éªŒè¯å¯†é’¥
+#define PCD_RECEIVE           0x08               //æ¥æ”¶æ•°æ®
+#define PCD_TRANSMIT          0x04               //å‘é€æ•°æ®
+#define PCD_TRANSCEIVE        0x0C               //å‘é€å¹¶æ¥æ”¶æ•°æ®
+#define PCD_RESETPHASE        0x0F               //å¤ä½
 
-#define PCD_CALCCRC           0x03               //CRC¼ÆËã
-
-/////////////////////////////////////////////////////////////////////
-//Mifare_One¿¨Æ¬ÃüÁî×Ö
-/////////////////////////////////////////////////////////////////////
-#define PICC_REQIDL           0x26               //Ñ°ÌìÏßÇøÄÚÎ´½øÈëĞİÃß×´Ì¬
-#define PICC_REQALL           0x52               //Ñ°ÌìÏßÇøÄÚÈ«²¿¿¨
-#define PICC_ANTICOLL1        0x93               //·À³å×²
-#define PICC_ANTICOLL2        0x95               //·À³å×²
-#define PICC_AUTHENT1A        0x60               //ÑéÖ¤AÃÜÔ¿
-#define PICC_AUTHENT1B        0x61               //ÑéÖ¤BÃÜÔ¿
-#define PICC_READ             0x30               //¶Á¿é
-#define PICC_WRITE            0xA0               //Ğ´¿é
-#define PICC_DECREMENT        0xC0               //¿Û¿î
-#define PICC_INCREMENT        0xC1               //³äÖµ
-#define PICC_RESTORE          0xC2               //µ÷¿éÊı¾İµ½»º³åÇø
-#define PICC_TRANSFER         0xB0               //±£´æ»º³åÇøÖĞÊı¾İ
-#define PICC_HALT             0x50               //ĞİÃß
+#define PCD_CALCCRC           0x03               //CRCè®¡ç®—
 
 /////////////////////////////////////////////////////////////////////
-//MF522 FIFO³¤¶È¶¨Òå
+//Mifare_Oneå¡ç‰‡å‘½ä»¤å­—
+/////////////////////////////////////////////////////////////////////
+#define PICC_REQIDL           0x26               //å¯»å¤©çº¿åŒºå†…æœªè¿›å…¥ä¼‘çœ çŠ¶æ€
+#define PICC_REQALL           0x52               //å¯»å¤©çº¿åŒºå†…å…¨éƒ¨å¡
+#define PICC_ANTICOLL1        0x93               //é˜²å†²æ’
+#define PICC_ANTICOLL2        0x95               //é˜²å†²æ’
+#define PICC_AUTHENT1A        0x60               //éªŒè¯Aå¯†é’¥
+#define PICC_AUTHENT1B        0x61               //éªŒè¯Bå¯†é’¥
+#define PICC_READ             0x30               //è¯»å—
+#define PICC_WRITE            0xA0               //å†™å—
+#define PICC_DECREMENT        0xC0               //æ‰£æ¬¾
+#define PICC_INCREMENT        0xC1               //å……å€¼
+#define PICC_RESTORE          0xC2               //è°ƒå—æ•°æ®åˆ°ç¼“å†²åŒº
+#define PICC_TRANSFER         0xB0               //ä¿å­˜ç¼“å†²åŒºä¸­æ•°æ®
+#define PICC_HALT             0x50               //ä¼‘çœ 
+
+/////////////////////////////////////////////////////////////////////
+//MF522 FIFOé•¿åº¦å®šä¹‰
 /////////////////////////////////////////////////////////////////////
 #define DEF_FIFO_LENGTH       64                 //FIFO size=64byte
 #define MAXRLEN  18
 
 /////////////////////////////////////////////////////////////////////
-//MF522¼Ä´æÆ÷¶¨Òå
+//MF522å¯„å­˜å™¨å®šä¹‰
 /////////////////////////////////////////////////////////////////////
 // PAGE 0
 #define     RFU00                 0x00    
@@ -193,7 +193,7 @@ char RC522_SingleDetectCard(unsigned char *serial);
 #define     RFU3F		  		  0x3F
 
 /////////////////////////////////////////////////////////////////////
-//ºÍMF522Í¨Ñ¶Ê±·µ»ØµÄ´íÎó´úÂë
+//å’ŒMF522é€šè®¯æ—¶è¿”å›çš„é”™è¯¯ä»£ç 
 /////////////////////////////////////////////////////////////////////
 #define 	MI_OK                 0x26
 #define 	MI_NOTAGERR           0xcc
@@ -201,7 +201,7 @@ char RC522_SingleDetectCard(unsigned char *serial);
 
 
 /////////////////////////////////////////////////////////////////////
-//ºÍMF522Í¨Ñ¶Ê±·µ»ØµÄ´íÎó´úÂë
+//å’ŒMF522é€šè®¯æ—¶è¿”å›çš„é”™è¯¯ä»£ç 
 /////////////////////////////////////////////////////////////////////
 
 
