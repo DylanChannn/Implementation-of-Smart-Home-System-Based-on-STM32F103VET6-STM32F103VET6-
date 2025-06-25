@@ -1,10 +1,10 @@
 /**
  ****************************************************************************************************
  * @file        PWM.c
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-20
- * @brief       ¶æ»ú¿ØÖÆÏà¹Ø´úÂë£¬ÒÔSG90ÎªÀı×Ó
+ * @brief       èˆµæœºæ§åˆ¶ç›¸å…³ä»£ç ï¼Œä»¥SG90ä¸ºä¾‹å­
  ****************************************************************************************************
  */
 
@@ -16,13 +16,13 @@
 float duty_circle_A = 0.0;
 
 /**
-  * @brief		³õÊ¼»¯TIM8 PWMÊä³ö¹¦ÄÜ
-  * @note		ÅäÖÃTIM8Í¨µÀ1(PC6)²úÉú50Hz PWMĞÅºÅ¿ØÖÆ¶æ»ú
-  * @details	1.Ê¹ÄÜGPIOCºÍTIM8Ê±ÖÓ;2. ÅäÖÃPC6Îª¸´ÓÃÍÆÍìÊä³ö(TIM8_CH1)
-  *			 	3. ÉèÖÃTIM8»ù´¡²ÎÊı;4. ÅäÖÃPWMÄ£Ê½:
-  *			 	5. Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷,6. ÆôÓÃTIM8¼ÆÊıÆ÷¼°PWMÊä³ö
-  * @remark		¸ß¼¶¶¨Ê±Æ÷Ğèµ÷ÓÃTIM_CtrlPWMOutputs()ÆôÓÃĞÅºÅÊä³ö
-  * @warning	PWM_PERIOD/PWM_PRESCALERĞèÔÚÍ·ÎÄ¼ş¶¨ÒåÕıÈ·Öµ
+  * @brief		åˆå§‹åŒ–TIM8 PWMè¾“å‡ºåŠŸèƒ½
+  * @note		é…ç½®TIM8é€šé“1(PC6)äº§ç”Ÿ50Hz PWMä¿¡å·æ§åˆ¶èˆµæœº
+  * @details	1.ä½¿èƒ½GPIOCå’ŒTIM8æ—¶é’Ÿ;2. é…ç½®PC6ä¸ºå¤ç”¨æ¨æŒ½è¾“å‡º(TIM8_CH1)
+  *			 	3. è®¾ç½®TIM8åŸºç¡€å‚æ•°;4. é…ç½®PWMæ¨¡å¼:
+  *			 	5. ä½¿èƒ½é¢„è£…è½½å¯„å­˜å™¨,6. å¯ç”¨TIM8è®¡æ•°å™¨åŠPWMè¾“å‡º
+  * @remark		é«˜çº§å®šæ—¶å™¨éœ€è°ƒç”¨TIM_CtrlPWMOutputs()å¯ç”¨ä¿¡å·è¾“å‡º
+  * @warning	PWM_PERIOD/PWM_PRESCALERéœ€åœ¨å¤´æ–‡ä»¶å®šä¹‰æ­£ç¡®å€¼
   */
 void PWM_Init(void)
 {
@@ -30,163 +30,163 @@ void PWM_Init(void)
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
     TIM_OCInitTypeDef TIM_OCInitStructure;
 
-    /* Ê¹ÄÜÊ±ÖÓ */
+    /* ä½¿èƒ½æ—¶é’Ÿ */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC | RCC_APB2Periph_TIM8, ENABLE);
 
-    /* ÅäÖÃPC6Îª¸´ÓÃÍÆÍìÊä³ö(TIM8_CH1)*/
+    /* é…ç½®PC6ä¸ºå¤ç”¨æ¨æŒ½è¾“å‡º(TIM8_CH1)*/
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-    /*¶¨Ê±Æ÷»ù´¡ÅäÖÃ */
-    TIM_TimeBaseStructure.TIM_Period = PWM_PERIOD - 1;					// ×Ô¶¯ÖØ×°ÔØÖµ
-    TIM_TimeBaseStructure.TIM_Prescaler = PWM_PRESCALER - 1;			// Ô¤·ÖÆµÖµ
+    /*å®šæ—¶å™¨åŸºç¡€é…ç½® */
+    TIM_TimeBaseStructure.TIM_Period = PWM_PERIOD - 1;					// è‡ªåŠ¨é‡è£…è½½å€¼
+    TIM_TimeBaseStructure.TIM_Prescaler = PWM_PRESCALER - 1;			// é¢„åˆ†é¢‘å€¼
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
 
-    /* PWMÄ£Ê½ÅäÖÃ */
+    /* PWMæ¨¡å¼é…ç½® */
     TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
     TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
     TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
-    TIM_OCInitStructure.TIM_Pulse = 0;									// ³õÊ¼Õ¼¿Õ±È
+    TIM_OCInitStructure.TIM_Pulse = 0;									// åˆå§‹å ç©ºæ¯”
     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
     TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
     TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
     TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
     TIM_OC1Init(TIM8, &TIM_OCInitStructure);
 
-    /* Ê¹ÄÜTIM8Ô¤×°ÔØ¼Ä´æÆ÷ */
+    /* ä½¿èƒ½TIM8é¢„è£…è½½å¯„å­˜å™¨ */
     TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
     TIM_ARRPreloadConfig(TIM8, ENABLE);
 
-    /* Ê¹ÄÜTIM8 */
+    /* ä½¿èƒ½TIM8 */
     TIM_Cmd(TIM8, ENABLE);
-    TIM_CtrlPWMOutputs(TIM8, ENABLE);  // ¸ß¼¶¶¨Ê±Æ÷ĞèÒª´ËÃüÁî
+    TIM_CtrlPWMOutputs(TIM8, ENABLE);  // é«˜çº§å®šæ—¶å™¨éœ€è¦æ­¤å‘½ä»¤
 }
 
 /**
-  * @brief	¼ÆËãÖ¸¶¨½Ç¶È¶ÔÓ¦µÄPWMÂö³å¿í¶È
-  * @param	angle Ä¿±ê½Ç¶ÈÖµ£¨0-180¶È£©
-  * @return	uint16_t PWMÂö³å¿í¶È£¨500-2500us£©
-  * @note	½Ç¶Èµ½Âö³å×ª»»¹«Ê½£º500us(0¡ã) ~ 2500us(180¡ã)
+  * @brief	è®¡ç®—æŒ‡å®šè§’åº¦å¯¹åº”çš„PWMè„‰å†²å®½åº¦
+  * @param	angle ç›®æ ‡è§’åº¦å€¼ï¼ˆ0-180åº¦ï¼‰
+  * @return	uint16_t PWMè„‰å†²å®½åº¦ï¼ˆ500-2500usï¼‰
+  * @note	è§’åº¦åˆ°è„‰å†²è½¬æ¢å…¬å¼ï¼š500us(0Â°) ~ 2500us(180Â°)
   */
 uint16_t Set_Angle(float angle)
 {
     if(angle < 0) angle = 0;
     if(angle > 180) angle = 180;
 	
-	/* ¼ÆËãÂö³å¿í¶È²¢·µ»Ø */
+	/* è®¡ç®—è„‰å†²å®½åº¦å¹¶è¿”å› */
     uint16_t pulse = 500 + (2000 * angle) / 180;
     return 500 + (2000 * angle) / 180;
 }
 
 /**
-  * @brief	¸üĞÂ¶æ»úPWMÕ¼¿Õ±È
-  * @param	pulse PWMÂö³å¿í¶È£¨µ¥Î»us£©
-  * @note	ÊäÈë·¶Î§ÏŞÖÆÔÚ500-2500us£¬¸üĞÂ¶¨Ê±Æ÷±È½ÏÖµ
+  * @brief	æ›´æ–°èˆµæœºPWMå ç©ºæ¯”
+  * @param	pulse PWMè„‰å†²å®½åº¦ï¼ˆå•ä½usï¼‰
+  * @note	è¾“å…¥èŒƒå›´é™åˆ¶åœ¨500-2500usï¼Œæ›´æ–°å®šæ—¶å™¨æ¯”è¾ƒå€¼
   */
 void Update_PWM(uint16_t pulse)
 {
-    /* È·±£Âö³åÔÚ500-2500us·¶Î§ÄÚ£¨¶ÔÓ¦0-180¶È£© */
+    /* ç¡®ä¿è„‰å†²åœ¨500-2500usèŒƒå›´å†…ï¼ˆå¯¹åº”0-180åº¦ï¼‰ */
     if(pulse < 500) pulse = 500;
     if(pulse > 2500) pulse = 2500;
     
-    /* ¸üĞÂÕ¼¿Õ±È */
+    /* æ›´æ–°å ç©ºæ¯” */
     TIM_SetCompare1(TIMX_PWM, pulse);
 	
-	/* ¸ß¼¶¶¨Ê±Æ÷(TIM8)ĞèÒªÃ¿´Î¸üĞÂºóµ÷ÓÃTIM_CtrlPWMOutputs() */
+	/* é«˜çº§å®šæ—¶å™¨(TIM8)éœ€è¦æ¯æ¬¡æ›´æ–°åè°ƒç”¨TIM_CtrlPWMOutputs() */
     TIM_CtrlPWMOutputs(TIMX_PWM, ENABLE);
 }
 
 /**
-  * @brief Æ½»¬ÒÆ¶¯µ½Ö¸¶¨½Ç¶È
-  * @param targetAngle Ä¿±ê½Ç¶ÈÖµ£¨0-180¶È£©
-  * @note ´Ëº¯Êı»á¿ØÖÆ¶æ»úÆ½»¬ÒÆ¶¯µ½Ö¸¶¨½Ç¶È
+  * @brief å¹³æ»‘ç§»åŠ¨åˆ°æŒ‡å®šè§’åº¦
+  * @param targetAngle ç›®æ ‡è§’åº¦å€¼ï¼ˆ0-180åº¦ï¼‰
+  * @note æ­¤å‡½æ•°ä¼šæ§åˆ¶èˆµæœºå¹³æ»‘ç§»åŠ¨åˆ°æŒ‡å®šè§’åº¦
   */
 void MoveToAngle(float targetAngle)
 {
-    /* ½Ç¶È·¶Î§ÏŞÖÆ */
+    /* è§’åº¦èŒƒå›´é™åˆ¶ */
     if(targetAngle < 45.0f) targetAngle = 45.0f;
     if(targetAngle > 135.0f) targetAngle = 135.0f;
     
-    /* Ö±½ÓÉèÖÃÄ¿±ê½Ç¶È */
+    /* ç›´æ¥è®¾ç½®ç›®æ ‡è§’åº¦ */
     duty_circle_A = targetAngle;
     
-    /* ¼ÆËã²¢¸üĞÂPWM */
+    /* è®¡ç®—å¹¶æ›´æ–°PWM */
     uint16_t pulse = 500 + (2000 * duty_circle_A) / 180;
     
-    /* È·±£Âö³åÔÚ·¶Î§ÄÚ */
+    /* ç¡®ä¿è„‰å†²åœ¨èŒƒå›´å†… */
     if(pulse < 500) pulse = 500;
     if(pulse > 2500) pulse = 2500;
     
-    /* ¸üĞÂÕ¼¿Õ±È */
+    /* æ›´æ–°å ç©ºæ¯” */
     TIM_SetCompare1(TIM8, pulse);
 }
 
 ///**
-// * @brief		¶æ»ú½Ç¶ÈÔö¼Óº¯Êı
-// * @param		ÎŞ
-// * @retval		ÎŞ
-// * @note		¸Ãº¯ÊıÓÃÓÚÔö¼Ó¶æ»ú½Ç¶È£¬±»menu.cËùÊ¹ÓÃ
-// *				Ã¿´ÎµİÔö½Ç¶ÈÎª5¡ã
+// * @brief		èˆµæœºè§’åº¦å¢åŠ å‡½æ•°
+// * @param		æ— 
+// * @retval		æ— 
+// * @note		è¯¥å‡½æ•°ç”¨äºå¢åŠ èˆµæœºè§’åº¦ï¼Œè¢«menu.cæ‰€ä½¿ç”¨
+// *				æ¯æ¬¡é€’å¢è§’åº¦ä¸º5Â°
 // */
 //void Increase_PWM_Angle(void)
 //{
-//    /* Ã¿´ÎÔö¼Ó5¡ã£¬×î´óÔö¼Ó45¡ã*/
+//    /* æ¯æ¬¡å¢åŠ 5Â°ï¼Œæœ€å¤§å¢åŠ 45Â°*/
 //    if(duty_circle_A < 90.0 + 45.0) 
 //	{
 //        duty_circle_A += 5.0;
 //        
-//        /* ¸üĞÂPWMÂö³å¿í¶È */
+//        /* æ›´æ–°PWMè„‰å†²å®½åº¦ */
 //        uint16_t pulse = Set_Angle(duty_circle_A);
 //        Update_PWM(pulse);
 //    } 
 //}
 
 ///**
-// * @brief		¶æ»ú½Ç¶È¼õÉÙº¯Êı
-// * @param		ÎŞ
-// * @retval		ÎŞ
-// * @note		¸Ãº¯ÊıÓÃÓÚÔö¼Ó¶æ»ú½Ç¶È£¬±»menu.cËùÊ¹ÓÃ
-// *				Ã¿´Îµİ¼õ½Ç¶ÈÎª5¡ã
+// * @brief		èˆµæœºè§’åº¦å‡å°‘å‡½æ•°
+// * @param		æ— 
+// * @retval		æ— 
+// * @note		è¯¥å‡½æ•°ç”¨äºå¢åŠ èˆµæœºè§’åº¦ï¼Œè¢«menu.cæ‰€ä½¿ç”¨
+// *				æ¯æ¬¡é€’å‡è§’åº¦ä¸º5Â°
 // */
-///* ¼õÉÙ¶æ»ú½Ç¶È */
+///* å‡å°‘èˆµæœºè§’åº¦ */
 //void Decrease_PWM_Angle(void)
 //{
-//    /* Ã¿´Î¼õÉÙ5¡ã£¬×îĞ¡¼õÉÙ45¡ã*/
+//    /* æ¯æ¬¡å‡å°‘5Â°ï¼Œæœ€å°å‡å°‘45Â°*/
 //    if(duty_circle_A > 90.0 - 45.0) 
 //	{
 //        duty_circle_A -= 5.0;
 //        
-//        /* ¸üĞÂPWMÂö³å¿í¶È */
+//        /* æ›´æ–°PWMè„‰å†²å®½åº¦ */
 //        uint16_t pulse = Set_Angle(duty_circle_A);
 //        Update_PWM(pulse);
 //    }
 //}
 
 /**
-  * @brief		¶æ»ú½Ç¶ÈÔö¼Óº¯Êı
-  * @param		ÎŞ
-  * @retval		ÎŞ
-  * @note		¸Ãº¯ÊıÓÃÓÚÔö¼Ó¶æ»ú½Ç¶È£¬±»menu.cËùÊ¹ÓÃ
-  *				Ã¿´ÎµİÔö½Ç¶ÈÎª5£¬Ö±ÖÁµ½´ïÄ¿±êÉè¶¨½Ç¶È
+  * @brief		èˆµæœºè§’åº¦å¢åŠ å‡½æ•°
+  * @param		æ— 
+  * @retval		æ— 
+  * @note		è¯¥å‡½æ•°ç”¨äºå¢åŠ èˆµæœºè§’åº¦ï¼Œè¢«menu.cæ‰€ä½¿ç”¨
+  *				æ¯æ¬¡é€’å¢è§’åº¦ä¸º5ï¼Œç›´è‡³åˆ°è¾¾ç›®æ ‡è®¾å®šè§’åº¦
   */
 void Increase_PWM_Angle(void)
 {
-    MoveToAngle(135.0);  // ¹ØÃÅÎ»ÖÃ
+    MoveToAngle(135.0);  // å…³é—¨ä½ç½®
 }
 
 /**
-  * @brief		¶æ»ú½Ç¶È¼õÉÙº¯Êı
-  * @param		ÎŞ
-  * @retval		ÎŞ
-  * @note		¸Ãº¯ÊıÓÃÓÚ¼õÉÙ¶æ»ú½Ç¶È£¬±»menu.cËùÊ¹ÓÃ
-  *				Ã¿´Îµİ¼õ½Ç¶ÈÎª5£¬Ö±ÖÁµ½´ïÄ¿±êÉè¶¨½Ç¶È
+  * @brief		èˆµæœºè§’åº¦å‡å°‘å‡½æ•°
+  * @param		æ— 
+  * @retval		æ— 
+  * @note		è¯¥å‡½æ•°ç”¨äºå‡å°‘èˆµæœºè§’åº¦ï¼Œè¢«menu.cæ‰€ä½¿ç”¨
+  *				æ¯æ¬¡é€’å‡è§’åº¦ä¸º5ï¼Œç›´è‡³åˆ°è¾¾ç›®æ ‡è®¾å®šè§’åº¦
   */
 void Decrease_PWM_Angle(void)
 {
-    MoveToAngle(45.0);  // ¿ªÃÅÎ»ÖÃ
+    MoveToAngle(45.0);  // å¼€é—¨ä½ç½®
 }
