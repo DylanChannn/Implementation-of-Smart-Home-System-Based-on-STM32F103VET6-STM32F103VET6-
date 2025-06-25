@@ -1,10 +1,10 @@
 /**
  ****************************************************************************************************
  * @file        PWM.h
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-20
- * @brief       ¶æ»ú¿ØÖÆÏà¹Ø´úÂëµÄÍ·ÎÄ¼ş£¬ÒÔSG90ÎªÀı×Ó
+ * @brief       èˆµæœºæ§åˆ¶ç›¸å…³ä»£ç çš„å¤´æ–‡ä»¶ï¼Œä»¥SG90ä¸ºä¾‹å­
  ****************************************************************************************************
  */
 #ifndef __PWM_H
@@ -12,17 +12,17 @@
 
 #include "stm32f10x.h"
 
-//Ê¹ÓÃ¶æ»úĞèÒªÔÚmain.cÌí¼Ó£º PWM_Init();
+//ä½¿ç”¨èˆµæœºéœ€è¦åœ¨main.cæ·»åŠ ï¼š PWM_Init();
 
-/* Ìí¼Ó¶æ»ú½Ç¶È·¶Î§ºê¶¨Òå */
-#define SERVO_MIN_ANGLE		0		// ¶æ»ú×îĞ¡½Ç¶È
-#define SERVO_MAX_ANGLE		180		// ¶æ»ú×î´ó½Ç¶È
-#define SERVO_MIN_PULSE 	500		// 0.5ms (0¡ã)
-#define SERVO_MAX_PULSE 	2500	// 2.5ms (180¡ã)
-#define PWM_PERIOD			20000   // 20msÖÜÆÚ(50Hz)
-#define PWM_PRESCALER		72      // 72MHz/72 = 1MHz (1us·Ö±æÂÊ)
+/* æ·»åŠ èˆµæœºè§’åº¦èŒƒå›´å®å®šä¹‰ */
+#define SERVO_MIN_ANGLE		0		// èˆµæœºæœ€å°è§’åº¦
+#define SERVO_MAX_ANGLE		180		// èˆµæœºæœ€å¤§è§’åº¦
+#define SERVO_MIN_PULSE 	500		// 0.5ms (0Â°)
+#define SERVO_MAX_PULSE 	2500	// 2.5ms (180Â°)
+#define PWM_PERIOD			20000   // 20mså‘¨æœŸ(50Hz)
+#define PWM_PRESCALER		72      // 72MHz/72 = 1MHz (1usåˆ†è¾¨ç‡)
 
-/********************************* ¸´ÓÃIOÒı½ÅµÄÍ¨ÓÃ¶¨Ê±Æ÷¹¦ÄÜ½øĞĞPWMÊä³ö *************************************/
+/********************************* å¤ç”¨IOå¼•è„šçš„é€šç”¨å®šæ—¶å™¨åŠŸèƒ½è¿›è¡ŒPWMè¾“å‡º *************************************/
 
 #define TIMX_PWM_CHY_GPIO_PORT     GPIOC
 #define TIMX_PWM_CHY_GPIO_PIN      GPIO_Pin_6
@@ -32,15 +32,15 @@
 #define TIMX_PWM_CHY               TIM_Channel_1
 #define TIMX_PWM_CHY_CLK           RCC_APB2Periph_TIM8
 
-/********************************************* ÆäËûÍâ²¿º¯Êı *************************************************/
+/********************************************* å…¶ä»–å¤–éƒ¨å‡½æ•° *************************************************/
 
 void PWM_Init(void);
 
 uint16_t Set_Angle(float angle);								//0-180 
-extern uint16_t Set_Angle(float angle);							//Ìí¼ÓÈ«¾ÖÉùÃ÷ 
+extern uint16_t Set_Angle(float angle);							//æ·»åŠ å…¨å±€å£°æ˜ 
 void Update_PWM(uint16_t pulse);  
 void Increase_PWM_Angle(void);
 void Decrease_PWM_Angle(void);
-void MoveToAngle(float targetAngle);							//ÒÆ¶¯µ½Ö¸¶¨½Ç¶È£¨0-180¡ã£©
+void MoveToAngle(float targetAngle);							//ç§»åŠ¨åˆ°æŒ‡å®šè§’åº¦ï¼ˆ0-180Â°ï¼‰
 
 #endif
