@@ -1,15 +1,15 @@
 /****************************************************************************************************
  * @file        menu.h
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-23
- * @brief       ÖÇÄÜ¼Ò¾Ó¿ØÖÆÏµÍ³²Ëµ¥Ä£¿éÍ·ÎÄ¼ş£º¶¨Òå²Ëµ¥×´Ì¬ºÍ½Ó¿Ú
- * @details     ±¾Í·ÎÄ¼ş¶¨Òå²Ëµ¥ÏµÍ³µÄºËĞÄÔªËØ£º
- *              - ²Ëµ¥×´Ì¬Ã¶¾Ù£¨MENU_MAINÖÁMENU_CLOUD¹²7ÖÖ×´Ì¬£©
- *              - °´¼üÊÂ¼ş¶¨Òå£¨KEY_NONE¡¢KEY1_PRESSµÈ£©
- *              - È«¾Ö×´Ì¬±äÁ¿ÉùÃ÷
- *              - ²Ëµ¥´¦Àíº¯ÊıÔ­ĞÍÉùÃ÷
- * @note        Óëmenu.cÎÄ¼şÅäºÏÊ¹ÓÃ£¬¹¹½¨ÍêÕûµÄ²Ëµ¥×´Ì¬»úÏµÍ³
+ * @brief       æ™ºèƒ½å®¶å±…æ§åˆ¶ç³»ç»Ÿèœå•æ¨¡å—å¤´æ–‡ä»¶ï¼šå®šä¹‰èœå•çŠ¶æ€å’Œæ¥å£
+ * @details     æœ¬å¤´æ–‡ä»¶å®šä¹‰èœå•ç³»ç»Ÿçš„æ ¸å¿ƒå…ƒç´ ï¼š
+ *              - èœå•çŠ¶æ€æšä¸¾ï¼ˆMENU_MAINè‡³MENU_CLOUDå…±7ç§çŠ¶æ€ï¼‰
+ *              - æŒ‰é”®äº‹ä»¶å®šä¹‰ï¼ˆKEY_NONEã€KEY1_PRESSç­‰ï¼‰
+ *              - å…¨å±€çŠ¶æ€å˜é‡å£°æ˜
+ *              - èœå•å¤„ç†å‡½æ•°åŸå‹å£°æ˜
+ * @note        ä¸menu.cæ–‡ä»¶é…åˆä½¿ç”¨ï¼Œæ„å»ºå®Œæ•´çš„èœå•çŠ¶æ€æœºç³»ç»Ÿ
  ****************************************************************************************************
  */
 #ifndef _MENU_H
@@ -18,29 +18,29 @@
 #include "stm32f10x.h"
 #include "stm32f10x_tim.h"
 
-/* ²Ëµ¥×´Ì¬Ã¶¾Ù */
+/* èœå•çŠ¶æ€æšä¸¾ */
 typedef enum {
-    MENU_MAIN = 0,       // Ö÷²Ëµ¥£¨Ñ¡Ôñ¿ØÖÆ·½Ê½£©
-    MENU_LOCAL,          // ±¾µØ¿ØÖÆ²Ëµ¥
-    MENU_CARD_STATUS,    // Ë¢¿¨×´Ì¬ÏÔÊ¾
-    MENU_LIGHT,          // LED¿ØÖÆ
-    MENU_CURTAIN,        // ´°Á±¿ØÖÆ
-    MENU_TEMP_HUM,       // ÎÂÊª¶ÈºÍ»ğÇéÏÔÊ¾
-    MENU_CLOUD           // °Í·¨ÔÆ¿ØÖÆ
+    MENU_MAIN = 0,       // ä¸»èœå•ï¼ˆé€‰æ‹©æ§åˆ¶æ–¹å¼ï¼‰
+    MENU_LOCAL,          // æœ¬åœ°æ§åˆ¶èœå•
+    MENU_CARD_STATUS,    // åˆ·å¡çŠ¶æ€æ˜¾ç¤º
+    MENU_LIGHT,          // LEDæ§åˆ¶
+    MENU_CURTAIN,        // çª—å¸˜æ§åˆ¶
+    MENU_TEMP_HUM,       // æ¸©æ¹¿åº¦å’Œç«æƒ…æ˜¾ç¤º
+    MENU_CLOUD           // å·´æ³•äº‘æ§åˆ¶
 } MenuState;
 
-/* °´¼ü¶¨Òå */
+/* æŒ‰é”®å®šä¹‰ */
 #define KEY_NONE     0
 #define KEY1_PRESS   1
 #define KEY2_PRESS   2
 #define KEY3_PRESS   3
 #define KEY4_PRESS   4
 
-extern MenuState currentMenu;    			// ÉùÃ÷È«¾Ö±äÁ¿
-extern uint8_t fireStatus;  	 			// 0:ÎŞ»ğÔÖ 1:ÓĞ»ğÔÖ
-extern uint32_t lastTempUpdate;  			//¶¨Ê±Ë¢ĞÂÎÂÊª¶ÈÊı¾İ»úÖÆ
+extern MenuState currentMenu;    			// å£°æ˜å…¨å±€å˜é‡
+extern uint8_t fireStatus;  	 			// 0:æ— ç«ç¾ 1:æœ‰ç«ç¾
+extern uint32_t lastTempUpdate;  			//å®šæ—¶åˆ·æ–°æ¸©æ¹¿åº¦æ•°æ®æœºåˆ¶
 
-/* ²Ëµ¥´¦Àíº¯Êı */
+/* èœå•å¤„ç†å‡½æ•° */
 void Menu_Init(void);
 void Menu_Update(uint8_t key);
 void Refresh_Current_Menu(void);
