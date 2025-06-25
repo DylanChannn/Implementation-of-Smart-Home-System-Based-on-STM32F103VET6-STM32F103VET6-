@@ -1,48 +1,48 @@
 /****************************************************************************************************
  * @file        MQ2.c
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-22
- * @brief       MQ-2ÆøÌå´«¸ĞÆ÷Çı¶¯Ä£¿é£ºÊµÏÖADCÊı¾İ²É¼¯ÓëÅ¨¶È¼ÆËã
- * @details     ±¾ÎÄ¼ş°üº¬MQ-2ÆøÌå´«¸ĞÆ÷µÄÍêÕûÇı¶¯¹¦ÄÜ£º
- *              - ADCÄ£¿é³õÊ¼»¯ÅäÖÃ
- *              - ´«¸ĞÆ÷Ä£ÄâĞÅºÅ²É¼¯ÓëÂË²¨´¦Àí
- *              - ÆøÌåÅ¨¶È(PPM)×ª»»Ëã·¨
- *              - Å¨¶È³¬±ê±¨¾¯¼ì²â
- * @note        Ê¹ÓÃÇ°ĞèÅäÖÃÏµÍ³Ê±ÖÓ£¬ÒÀÀµGPIOÍâÉèºÍADCÄ£¿éÖ§³Ö
- *              ±¨¾¯ãĞÖµÎªMQ2_PPM_ALARM_THRESHOLD£¬ÔÚÍ·ÎÄ¼şÖĞĞŞ¸ÄãĞÖµºê¶¨Òå
+ * @brief       MQ-2æ°”ä½“ä¼ æ„Ÿå™¨é©±åŠ¨æ¨¡å—ï¼šå®ç°ADCæ•°æ®é‡‡é›†ä¸æµ“åº¦è®¡ç®—
+ * @details     æœ¬æ–‡ä»¶åŒ…å«MQ-2æ°”ä½“ä¼ æ„Ÿå™¨çš„å®Œæ•´é©±åŠ¨åŠŸèƒ½ï¼š
+ *              - ADCæ¨¡å—åˆå§‹åŒ–é…ç½®
+ *              - ä¼ æ„Ÿå™¨æ¨¡æ‹Ÿä¿¡å·é‡‡é›†ä¸æ»¤æ³¢å¤„ç†
+ *              - æ°”ä½“æµ“åº¦(PPM)è½¬æ¢ç®—æ³•
+ *              - æµ“åº¦è¶…æ ‡æŠ¥è­¦æ£€æµ‹
+ * @note        ä½¿ç”¨å‰éœ€é…ç½®ç³»ç»Ÿæ—¶é’Ÿï¼Œä¾èµ–GPIOå¤–è®¾å’ŒADCæ¨¡å—æ”¯æŒ
+ *              æŠ¥è­¦é˜ˆå€¼ä¸ºMQ2_PPM_ALARM_THRESHOLDï¼Œåœ¨å¤´æ–‡ä»¶ä¸­ä¿®æ”¹é˜ˆå€¼å®å®šä¹‰
  ****************************************************************************************************
  */
 #include "MQ2.h"
 #include "gpio.h"
 
 /**
-  * @brief  ADC³õÊ¼»¯ÅäÖÃ
+  * @brief  ADCåˆå§‹åŒ–é…ç½®
   * @param  None
   * @retval None
   */
 void ADCx_Init(void)
 {
-	/* ¿ªÆôADCÊ±ÖÓ */
+	/* å¼€å¯ADCæ—¶é’Ÿ */
 	RCC_APB2PeriphClockCmd(ADC_CLK, ENABLE);
 	
-	/* ADCÆµÂÊ½øĞĞ6·ÖÆµ */
+	/* ADCé¢‘ç‡è¿›è¡Œ6åˆ†é¢‘ */
 	RCC_ADCCLKConfig(RCC_PCLK2_Div6);
 	
-	/* ÅäÖÃADC½á¹¹Ìå */
+	/* é…ç½®ADCç»“æ„ä½“ */
 	ADC_InitTypeDef ADC_InitStructure;
-	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;					//¶ÀÁ¢Ä£Ê½
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;				//Êı¾İÓÒ¶ÔÆë
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;	//Èí¼ş´¥·¢
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;					//µ¥´Î×ª»»
-	ADC_InitStructure.ADC_ScanConvMode = DISABLE;						//·ÇÉ¨ÃèÄ£Ê½
-	ADC_InitStructure.ADC_NbrOfChannel = 1;								//×ÜÍ¨µÀÊı
-	ADC_Init(ADCx, &ADC_InitStructure);									//³õÊ¼»¯ADC1
+	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;					//ç‹¬ç«‹æ¨¡å¼
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;				//æ•°æ®å³å¯¹é½
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;	//è½¯ä»¶è§¦å‘
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;					//å•æ¬¡è½¬æ¢
+	ADC_InitStructure.ADC_ScanConvMode = DISABLE;						//éæ‰«ææ¨¡å¼
+	ADC_InitStructure.ADC_NbrOfChannel = 1;								//æ€»é€šé“æ•°
+	ADC_Init(ADCx, &ADC_InitStructure);									//åˆå§‹åŒ–ADC1
 	
-	/* ¿ªÆôADCx */
+	/* å¼€å¯ADCx */
 	ADC_Cmd(ADCx, ENABLE);
 	
-	/* ½øĞĞADCĞ£×¼ */
+	/* è¿›è¡ŒADCæ ¡å‡† */
 	ADC_ResetCalibration(ADCx);
 	while(ADC_GetResetCalibrationStatus(ADCx) == SET);
 	ADC_StartCalibration(ADCx);
@@ -50,23 +50,23 @@ void ADCx_Init(void)
 }
 
 /**
-  * @brief  »ñÈ¡ADC×ª»»ºóµÄÔ­Ê¼Êı¾İ
-  * @param  ADC_Channel£º	Ñ¡ÔñADC²É¼¯Í¨µÀ
-  * @param  ADC_SampleTime£ºÑ¡ÔñADC²ÉÑùÊ±¼ä
-  * @retval ADC×ª»»ºóµÄÔ­Ê¼Öµ£¨12Î»¾«¶È£©
+  * @brief  è·å–ADCè½¬æ¢åçš„åŸå§‹æ•°æ®
+  * @param  ADC_Channelï¼š	é€‰æ‹©ADCé‡‡é›†é€šé“
+  * @param  ADC_SampleTimeï¼šé€‰æ‹©ADCé‡‡æ ·æ—¶é—´
+  * @retval ADCè½¬æ¢åçš„åŸå§‹å€¼ï¼ˆ12ä½ç²¾åº¦ï¼‰
   */
 uint16_t ADC_GetValue(uint8_t ADC_Channel,uint8_t ADC_SampleTime)
 {
-	/* ÅäÖÃADCÍ¨µÀ */
+	/* é…ç½®ADCé€šé“ */
 	ADC_RegularChannelConfig(ADCx, ADC_Channel, 1, ADC_SampleTime);
 	
-	ADC_SoftwareStartConvCmd(ADCx, ENABLE); 						//Èí¼ş´¥·¢ADC×ª»»
-	while(ADC_GetFlagStatus(ADCx, ADC_FLAG_EOC) == RESET); 			//¶ÁÈ¡ADC×ª»»Íê³É±êÖ¾Î»
+	ADC_SoftwareStartConvCmd(ADCx, ENABLE); 						//è½¯ä»¶è§¦å‘ADCè½¬æ¢
+	while(ADC_GetFlagStatus(ADCx, ADC_FLAG_EOC) == RESET); 			//è¯»å–ADCè½¬æ¢å®Œæˆæ ‡å¿—ä½
 	return ADC_GetConversionValue(ADCx);
 }
 
 /**
-  * @brief  MQ-2´«¸ĞÆ÷³õÊ¼»¯
+  * @brief  MQ-2ä¼ æ„Ÿå™¨åˆå§‹åŒ–
   * @param  None
   * @retval None
   */
@@ -74,30 +74,30 @@ void MQ2_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
-	RCC_APB2PeriphClockCmd (MQ2_AO_GPIO_CLK, ENABLE );				// ´ò¿ª ADC IO¶Ë¿ÚÊ±ÖÓ
-	GPIO_InitStructure.GPIO_Pin = MQ2_AO_GPIO_PIN;					// ÅäÖÃ ADC IO Òı½ÅÄ£Ê½
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;					// ÉèÖÃÎªÄ£ÄâÊäÈë
+	RCC_APB2PeriphClockCmd (MQ2_AO_GPIO_CLK, ENABLE );				// æ‰“å¼€ ADC IOç«¯å£æ—¶é’Ÿ
+	GPIO_InitStructure.GPIO_Pin = MQ2_AO_GPIO_PIN;					// é…ç½® ADC IO å¼•è„šæ¨¡å¼
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;					// è®¾ç½®ä¸ºæ¨¡æ‹Ÿè¾“å…¥
 	
-	GPIO_Init(MQ2_AO_GPIO_PORT, &GPIO_InitStructure);				// ³õÊ¼»¯ ADC IO
+	GPIO_Init(MQ2_AO_GPIO_PORT, &GPIO_InitStructure);				// åˆå§‹åŒ– ADC IO
 
 	ADCx_Init();
 }
 
 /**
-  * @brief  ¶ÁÈ¡MQ-2µÄADCÔ­Ê¼Öµ
+  * @brief  è¯»å–MQ-2çš„ADCåŸå§‹å€¼
   * @param  None
-  * @retval MQ-2´«¸ĞÆ÷µÄADCÔ­Ê¼¶ÁÊı
+  * @retval MQ-2ä¼ æ„Ÿå™¨çš„ADCåŸå§‹è¯»æ•°
   */
 uint16_t MQ2_ADC_Read(void)
 {
-	/* ÉèÖÃÖ¸¶¨ADCµÄ¹æÔò×éÍ¨µÀ£¬²ÉÑùÊ±¼ä */
+	/* è®¾ç½®æŒ‡å®šADCçš„è§„åˆ™ç»„é€šé“ï¼Œé‡‡æ ·æ—¶é—´ */
 	return ADC_GetValue(ADC_CHANNEL, ADC_SampleTime_55Cycles5);
 }
 
 /**
-  * @brief  »ñÈ¡¾­¹ıÂË²¨´¦ÀíµÄMQ-2Êı¾İ
+  * @brief  è·å–ç»è¿‡æ»¤æ³¢å¤„ç†çš„MQ-2æ•°æ®
   * @param  None
-  * @retval ¶à´Î²ÉÑùÆ½¾ùÖµ
+  * @retval å¤šæ¬¡é‡‡æ ·å¹³å‡å€¼
   */
 uint16_t MQ2_GetData(void)
 {
@@ -108,15 +108,15 @@ uint16_t MQ2_GetData(void)
 		Delay_ms(5);
 	}
 
-	/* ¼ÆËãÆ½¾ùÖµ */
+	/* è®¡ç®—å¹³å‡å€¼ */
 	tempData /= MQ2_READ_TIMES;
 	return tempData;
 }
 
 /**
-  * @brief  »ñÈ¡MQ-2´«¸ĞÆ÷¼ì²âµÄPPMÅ¨¶ÈÖµ
+  * @brief  è·å–MQ-2ä¼ æ„Ÿå™¨æ£€æµ‹çš„PPMæµ“åº¦å€¼
   * @param  None
-  * @retval ¼ÆËã³öµÄÆøÌåPPMÖµ£¨¸¡µãĞÍ£©
+  * @retval è®¡ç®—å‡ºçš„æ°”ä½“PPMå€¼ï¼ˆæµ®ç‚¹å‹ï¼‰
   */
 float MQ2_GetData_PPM(void)
 {
@@ -139,25 +139,25 @@ float MQ2_GetData_PPM(void)
 }
 
 /**
-  * @brief  ¼ì²âÆøÌåÅ¨¶ÈÊÇ·ñ³¬±ê
+  * @brief  æ£€æµ‹æ°”ä½“æµ“åº¦æ˜¯å¦è¶…æ ‡
   * @param  None
-  * @retval ±¨¾¯×´Ì¬£º
-  * @arg 	0: Å¨¶ÈÕı³£
-  * @arg 	1: Å¨¶È³¬±ê£¨PPM > 10.00£©
+  * @retval æŠ¥è­¦çŠ¶æ€ï¼š
+  * @arg 	0: æµ“åº¦æ­£å¸¸
+  * @arg 	1: æµ“åº¦è¶…æ ‡ï¼ˆPPM > 10.00ï¼‰
   */
 uint8_t MQ2_GetStatus(void)
 {
     float current_ppm = MQ2_GetData_PPM();
     
-    /* ÉèÖÃ±¨¾¯ãĞÖµ */
+    /* è®¾ç½®æŠ¥è­¦é˜ˆå€¼ */
     const float ALARM_THRESHOLD = 10.00f;
     
     if(current_ppm > ALARM_THRESHOLD)
     {
-		/* ´¥·¢±¨¾¯ */
+		/* è§¦å‘æŠ¥è­¦ */
 //		BEEP_Ctrl(BEEP_Open);
 		return 1;
     }
     
-    return 0;			//Å¨¶ÈÕı³£
+    return 0;			//æµ“åº¦æ­£å¸¸
 }
