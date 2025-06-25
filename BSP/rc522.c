@@ -6,12 +6,12 @@
 #define		MAXRLEN 18
 #define		RC522_DELAY()  Delay_us(2)
 
-/*  Òı½Åºê¶¨Òå
+/*  å¼•è„šå®å®šä¹‰
  *	SDA(CS)---PD7
  *	SCK---PB3
  *	MOSI--PB5
  *	MISO--PB4
- *	¿Õ
+ *	ç©º
  *	GND--GND
  *	RST---PB6
  *	3.3V-3.3V
@@ -22,54 +22,54 @@ void MFRC522_Init(void)
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOB, ENABLE);
 	
-	/* Ê¹ÄÜAFIOÊ±ÖÓÓÃÓÚÒı½ÅPD7µÄÖØÓ³Éä */
+	/* ä½¿èƒ½AFIOæ—¶é’Ÿç”¨äºå¼•è„šPD7çš„é‡æ˜ å°„ */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
     
-    /* ÊÍ·ÅPD7µÄJTAG¹¦ÄÜ */
+    /* é‡Šæ”¾PD7çš„JTAGåŠŸèƒ½ */
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 
-	/* ÅäÖÃ SPI_RC522_SPI Òı½Å£ºSDA */
+	/* é…ç½® SPI_RC522_SPI å¼•è„šï¼šSDA */
 	GPIO_InitStructure.GPIO_Pin = MFRC522_GPIO_SDA_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(MFRC522_GPIO_SDA_PORT, &GPIO_InitStructure);
 
-	/* ÅäÖÃ SPI_RC522_SPI Òı½Å£ºSCK */
+	/* é…ç½® SPI_RC522_SPI å¼•è„šï¼šSCK */
 	GPIO_InitStructure.GPIO_Pin = MFRC522_GPIO_SCK_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(MFRC522_GPIO_SCK_PORT, &GPIO_InitStructure);
 
-	/* ÅäÖÃ SPI_RC522_SPI Òı½Å£ºMOSI */
+	/* é…ç½® SPI_RC522_SPI å¼•è„šï¼šMOSI */
 	GPIO_InitStructure.GPIO_Pin = MFRC522_GPIO_MOSI_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(MFRC522_GPIO_MOSI_PORT, &GPIO_InitStructure);
 
-	/* ÅäÖÃ SPI_RC522_SPI Òı½Å£ºMISO */
+	/* é…ç½® SPI_RC522_SPI å¼•è„šï¼šMISO */
 	GPIO_InitStructure.GPIO_Pin = MFRC522_GPIO_MISO_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(MFRC522_GPIO_MISO_PORT, &GPIO_InitStructure);
 
-	/* ÅäÖÃ SPI_RC522_SPI Òı½Å£ºRST */
+	/* é…ç½® SPI_RC522_SPI å¼•è„šï¼šRST */
 	GPIO_InitStructure.GPIO_Pin = MFRC522_GPIO_RST_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(MFRC522_GPIO_RST_PORT, &GPIO_InitStructure);
 	
-	/* Ôö¼Ó¸´Î»³õÊ¼»¯ */
-    MFRC522_RST_H;			// À­¸ß¸´Î»
+	/* å¢åŠ å¤ä½åˆå§‹åŒ– */
+    MFRC522_RST_H;			// æ‹‰é«˜å¤ä½
     Delay_ms(10);
     MFRC522_Reset();
-    MFRC522_AntennaOn();	// ÆôÓÃÌìÏß
+    MFRC522_AntennaOn();	// å¯ç”¨å¤©çº¿
 }
 	
 
 /////////////////////////////////////////////////////////////////////
-//¹¦ÄÜÃèÊöª¡´ÓMFRC522µÄÄ³Ò»¼Ä´æÆ÷¶ÁÒ»¸ö×Ö½ÚÊı¾İ
-//²ÎÊıËµÃ÷£ºAddress[IN]:¼Ä´æÆ÷µØÖ·
-//·µ    »Ø£º¶Á³öµÄÖµ
+//åŠŸèƒ½æè¿°î€€ä»MFRC522çš„æŸä¸€å¯„å­˜å™¨è¯»ä¸€ä¸ªå­—èŠ‚æ•°æ®
+//å‚æ•°è¯´æ˜ï¼šAddress[IN]:å¯„å­˜å™¨åœ°å€
+//è¿”    å›ï¼šè¯»å‡ºçš„å€¼
 /////////////////////////////////////////////////////////////////////
 unsigned char Read_MFRC522(unsigned char Address)
 {
@@ -119,9 +119,9 @@ unsigned char Read_MFRC522(unsigned char Address)
 		ucResult;
 }
 /////////////////////////////////////////////////////////////////////
-//¹¦ÄÜÃèÊöª¡ÏòMFRC522µÄÄ³Ò»¼Ä´æÆ÷Ğ´Ò»¸ö×Ö½ÚÊı¾İ
-//²ÎÊıËµÃ÷£ºAddress[IN]:¼Ä´æÆ÷µØÖ·
-//          value[IN]:Ğ´ÈëµÄÖµ
+//åŠŸèƒ½æè¿°î€€å‘MFRC522çš„æŸä¸€å¯„å­˜å™¨å†™ä¸€ä¸ªå­—èŠ‚æ•°æ®
+//å‚æ•°è¯´æ˜ï¼šAddress[IN]:å¯„å­˜å™¨åœ°å€
+//          value[IN]:å†™å…¥çš„å€¼
 /////////////////////////////////////////////////////////////////////
 void Write_MFRC522(unsigned char Address, unsigned char value)
 {  
@@ -174,8 +174,8 @@ void Write_MFRC522(unsigned char Address, unsigned char value)
 
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£º¸´Î»RC522
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK
+//åŠŸ    èƒ½ï¼šå¤ä½RC522
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK
 /////////////////////////////////////////////////////////////////////
 char MFRC522_Reset(void) 
 {
@@ -193,7 +193,7 @@ char MFRC522_Reset(void)
 
 	Delay_us (1);
 	
-	Write_MFRC522(ModeReg,0x3D);            //ºÍMifare¿¨Í¨Ñ¶£¬CRC³õÊ¼Öµ0x6363
+	Write_MFRC522(ModeReg,0x3D);            //å’ŒMifareå¡é€šè®¯ï¼ŒCRCåˆå§‹å€¼0x6363
 	Write_MFRC522(TReloadRegL,30);           
 	Write_MFRC522(TReloadRegH,0);
 	Write_MFRC522(TModeReg,0x8D);
@@ -203,9 +203,9 @@ char MFRC522_Reset(void)
 }
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºÖÃRC522¼Ä´æÆ÷Î»
-//²ÎÊıËµÃ÷£ºreg[IN]:¼Ä´æÆ÷µØÖ·
-//          mask[IN]:ÖÃÎ»Öµ
+//åŠŸ    èƒ½ï¼šç½®RC522å¯„å­˜å™¨ä½
+//å‚æ•°è¯´æ˜ï¼šreg[IN]:å¯„å­˜å™¨åœ°å€
+//          mask[IN]:ç½®ä½å€¼
 /////////////////////////////////////////////////////////////////////
 void SetBitMask(unsigned char reg,unsigned char mask)  
 {
@@ -215,9 +215,9 @@ void SetBitMask(unsigned char reg,unsigned char mask)
 }
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºÇåRC522¼Ä´æÆ÷Î»
-//²ÎÊıËµÃ÷£ºreg[IN]:¼Ä´æÆ÷µØÖ·
-//          mask[IN]:ÇåÎ»Öµ
+//åŠŸ    èƒ½ï¼šæ¸…RC522å¯„å­˜å™¨ä½
+//å‚æ•°è¯´æ˜ï¼šreg[IN]:å¯„å­˜å™¨åœ°å€
+//          mask[IN]:æ¸…ä½å€¼
 /////////////////////////////////////////////////////////////////////
 void ClearBitMask(unsigned char reg,unsigned char mask)  
 {
@@ -228,12 +228,12 @@ void ClearBitMask(unsigned char reg,unsigned char mask)
 
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºÍ¨¹ıRC522ºÍISO14443¿¨Í¨Ñ¶
-//²ÎÊıËµÃ÷£ºCommand[IN]:RC522ÃüÁî×Ö
-//          pInData[IN]:Í¨¹ıRC522·¢ËÍµ½¿¨Æ¬µÄÊı¾İ
-//          InLenByte[IN]:·¢ËÍÊı¾İµÄ×Ö½Ú³¤¶È
-//          pOutData[OUT]:½ÓÊÕµ½µÄ¿¨Æ¬·µ»ØÊı¾İ
-//          *pOutLenBit[OUT]:·µ»ØÊı¾İµÄÎ»³¤¶È
+//åŠŸ    èƒ½ï¼šé€šè¿‡RC522å’ŒISO14443å¡é€šè®¯
+//å‚æ•°è¯´æ˜ï¼šCommand[IN]:RC522å‘½ä»¤å­—
+//          pInData[IN]:é€šè¿‡RC522å‘é€åˆ°å¡ç‰‡çš„æ•°æ®
+//          InLenByte[IN]:å‘é€æ•°æ®çš„å­—èŠ‚é•¿åº¦
+//          pOutData[OUT]:æ¥æ”¶åˆ°çš„å¡ç‰‡è¿”å›æ•°æ®
+//          *pOutLenBit[OUT]:è¿”å›æ•°æ®çš„ä½é•¿åº¦
 /////////////////////////////////////////////////////////////////////
 char MFRC522_ToCard(unsigned char Command, 
                  unsigned char *pInData, 
@@ -261,25 +261,25 @@ char MFRC522_ToCard(unsigned char Command,
          break;
     }
    
-    Write_MFRC522(ComIEnReg,irqEn|0x80);	//PCD_TRANSCEIVEÄ£Ê½ ÎŞÃüÁî¸Ä±ä
-    ClearBitMask(ComIrqReg,0x80);			//IRQ¿ªÂ©Êä³ö
-    Write_MFRC522(CommandReg,PCD_IDLE);  //È¡Ïûµ±Ç°ÃüÁî
-    SetBitMask(FIFOLevelReg,0x80);		//Çå³ıFIFO Flash ÄÚErrReg  BufferOvfl±êÖ¾
+    Write_MFRC522(ComIEnReg,irqEn|0x80);	//PCD_TRANSCEIVEæ¨¡å¼ æ— å‘½ä»¤æ”¹å˜
+    ClearBitMask(ComIrqReg,0x80);			//IRQå¼€æ¼è¾“å‡º
+    Write_MFRC522(CommandReg,PCD_IDLE);  //å–æ¶ˆå½“å‰å‘½ä»¤
+    SetBitMask(FIFOLevelReg,0x80);		//æ¸…é™¤FIFO Flash å†…ErrReg  BufferOvflæ ‡å¿—
     
     for (i=0; i<InLenByte; i++)
     {   
-				Write_MFRC522(FIFODataReg, pInData[i]);    //°ÑÊı¾İ´æµ½FIFO
+				Write_MFRC522(FIFODataReg, pInData[i]);    //æŠŠæ•°æ®å­˜åˆ°FIFO
 	}
-    Write_MFRC522(CommandReg, Command);   //·¢ËÍFIFOÄÚÈİ
+    Write_MFRC522(CommandReg, Command);   //å‘é€FIFOå†…å®¹
    
     
     if (Command == PCD_TRANSCEIVE)
     {    
-				SetBitMask(BitFramingReg,0x80);  //Á¢¼´Í£Ö¹¶¨Ê±Æ÷
+				SetBitMask(BitFramingReg,0x80);  //ç«‹å³åœæ­¢å®šæ—¶å™¨
 	}
     
 	n = Read_MFRC522(ComIrqReg);
-    i = 1500;//¸ù¾İÊ±ÖÓÆµÂÊµ÷Õû£¬²Ù×÷M1¿¨×î´óµÈ´ıÊ±¼ä25ms
+    i = 1500;//æ ¹æ®æ—¶é’Ÿé¢‘ç‡è°ƒæ•´ï¼Œæ“ä½œM1å¡æœ€å¤§ç­‰å¾…æ—¶é—´25ms
     do 
     {
          n = Read_MFRC522(ComIrqReg);
@@ -322,8 +322,8 @@ char MFRC522_ToCard(unsigned char Command,
    return status;
 }
 
-//¿ªÆôÌìÏß  
-//Ã¿´ÎÆô¶¯»ò¹Ø±ÕÌìÏß·¢ÉäÖ®¼äÓ¦ÖÁÉÙÓĞ1msµÄ¼ä¸ô
+//å¼€å¯å¤©çº¿  
+//æ¯æ¬¡å¯åŠ¨æˆ–å…³é—­å¤©çº¿å‘å°„ä¹‹é—´åº”è‡³å°‘æœ‰1msçš„é—´éš”
 void MFRC522_AntennaOn(void)
 {
     unsigned char i;
@@ -334,14 +334,14 @@ void MFRC522_AntennaOn(void)
     }
 }
 
-//¹Ø±ÕÌìÏß
+//å…³é—­å¤©çº¿
 void MFRC522_AntennaOff(void)
 {
     ClearBitMask(TxControlReg, 0x03);
 }
 
-//¹¦ÄÜÃèÊöª¢ÓÃMF522¼ÆËãCRC
-//ÊäÈë²ÎÊıª¢pIndata--Òª¶ÁÊıCRCµÄÊı¾İª¡len--Êı¾İ³¤¶Èª¡pOutData--¼ÆËãµÄCRC½á¹û
+//åŠŸèƒ½æè¿°î€ç”¨MF522è®¡ç®—CRC
+//è¾“å…¥å‚æ•°î€pIndata--è¦è¯»æ•°CRCçš„æ•°æ®î€€len--æ•°æ®é•¿åº¦î€€pOutData--è®¡ç®—çš„CRCç»“æœ
 void CalulateCRC(unsigned char *pIndata,unsigned char len,unsigned char *pOutData)
 {
     unsigned char i,n;
@@ -364,8 +364,8 @@ void CalulateCRC(unsigned char *pIndata,unsigned char len,unsigned char *pOutDat
 
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºÃüÁî¿¨Æ¬½øÈëĞİÃß×´Ì¬
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK
+//åŠŸ    èƒ½ï¼šå‘½ä»¤å¡ç‰‡è¿›å…¥ä¼‘çœ çŠ¶æ€
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK
 /////////////////////////////////////////////////////////////////////
 char MFRC522_Halt(void)
 {
@@ -376,24 +376,24 @@ char MFRC522_Halt(void)
     ucComMF522Buf[1] = 0;
     CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
  
-    /* Ö±½Ó·µ»Ø½á¹û£¬²»´æ´¢µ½ÖĞ¼ä±äÁ¿ */
+    /* ç›´æ¥è¿”å›ç»“æœï¼Œä¸å­˜å‚¨åˆ°ä¸­é—´å˜é‡ */
     return MFRC522_ToCard(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen) == MI_OK 
            ? MI_OK 
            : MI_ERR;
 }
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºÑ°¿¨
-//²ÎÊıËµÃ÷: req_code[IN]:Ñ°¿¨·½Ê½
-//                0x52 = Ñ°¸ĞÓ¦ÇøÄÚËùÓĞ·ûºÏ14443A±ê×¼µÄ¿¨
-//                0x26 = Ñ°Î´½øÈëĞİÃß×´Ì¬µÄ¿¨
-//          pTagType[OUT]£º¿¨Æ¬ÀàĞÍ´úÂë
+//åŠŸ    èƒ½ï¼šå¯»å¡
+//å‚æ•°è¯´æ˜: req_code[IN]:å¯»å¡æ–¹å¼
+//                0x52 = å¯»æ„Ÿåº”åŒºå†…æ‰€æœ‰ç¬¦åˆ14443Aæ ‡å‡†çš„å¡
+//                0x26 = å¯»æœªè¿›å…¥ä¼‘çœ çŠ¶æ€çš„å¡
+//          pTagType[OUT]ï¼šå¡ç‰‡ç±»å‹ä»£ç 
 //                0x4400 = Mifare_UltraLight
 //                0x0400 = Mifare_One(S50)
 //                0x0200 = Mifare_One(S70)
 //                0x0800 = Mifare_Pro(X)
 //                0x4403 = Mifare_DESFire
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK
 /////////////////////////////////////////////////////////////////////
 char MFRC522_Request(unsigned char req_code,unsigned char *pTagType)
 {
@@ -424,9 +424,9 @@ char MFRC522_Request(unsigned char req_code,unsigned char *pTagType)
 
 
 
-//¹¦    ÄÜ£º·À³åÍ»¼ì²âª¡¶ÁÈ¡Ñ¡ÖĞ¿¨Æ¬µÄ¿¨ĞòÁĞºÅ
-//²ÎÊıËµÃ÷: pSnr[OUT]:¿¨Æ¬ĞòÁĞºÅ£¬4×Ö½Ú
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK 
+//åŠŸ    èƒ½ï¼šé˜²å†²çªæ£€æµ‹î€€è¯»å–é€‰ä¸­å¡ç‰‡çš„å¡åºåˆ—å·
+//å‚æ•°è¯´æ˜: pSnr[OUT]:å¡ç‰‡åºåˆ—å·ï¼Œ4å­—èŠ‚
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK 
 char MFRC522_Anticoll(unsigned char *pSnr)
 {
     char status;
@@ -462,9 +462,9 @@ char MFRC522_Anticoll(unsigned char *pSnr)
 
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºÑ¡¶¨¿¨Æ¬
-//²ÎÊıËµÃ÷: pSnr[IN]:¿¨Æ¬ĞòÁĞºÅ£¬4×Ö½Ú
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK
+//åŠŸ    èƒ½ï¼šé€‰å®šå¡ç‰‡
+//å‚æ•°è¯´æ˜: pSnr[IN]:å¡ç‰‡åºåˆ—å·ï¼Œ4å­—èŠ‚
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK
 /////////////////////////////////////////////////////////////////////
 char MFRC522_SelectTag(unsigned char *pSnr)
 {
@@ -498,14 +498,14 @@ char MFRC522_SelectTag(unsigned char *pSnr)
 
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºÑéÖ¤¿¨Æ¬ÃÜÂë
-//²ÎÊıËµÃ÷: auth_mode[IN]: ÃÜÂëÑéÖ¤Ä£Ê½
-//                 0x60 = ÑéÖ¤AÃÜÔ¿
-//                 0x61 = ÑéÖ¤BÃÜÔ¿ 
-//          addr[IN]£º¿éµØÖ·
-//          pKey[IN]£ºÃÜÂë
-//          pSnr[IN]£º¿¨Æ¬ĞòÁĞºÅ£¬4×Ö½Ú
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK
+//åŠŸ    èƒ½ï¼šéªŒè¯å¡ç‰‡å¯†ç 
+//å‚æ•°è¯´æ˜: auth_mode[IN]: å¯†ç éªŒè¯æ¨¡å¼
+//                 0x60 = éªŒè¯Aå¯†é’¥
+//                 0x61 = éªŒè¯Bå¯†é’¥ 
+//          addr[IN]ï¼šå—åœ°å€
+//          pKey[IN]ï¼šå¯†ç 
+//          pSnr[IN]ï¼šå¡ç‰‡åºåˆ—å·ï¼Œ4å­—èŠ‚
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK
 /////////////////////////////////////////////////////////////////////               
 char MFRC522_AuthState(unsigned char auth_mode,unsigned char addr,unsigned char *pKey,unsigned char *pSnr)
 {
@@ -531,10 +531,10 @@ char MFRC522_AuthState(unsigned char auth_mode,unsigned char addr,unsigned char 
 
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£º¶ÁÈ¡M1¿¨Ò»¿éÊı¾İ
-//²ÎÊıËµÃ÷: addr[IN]£º¿éµØÖ·
-//          pData[OUT]£º¶Á³öµÄÊı¾İ£¬16×Ö½Ú
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK
+//åŠŸ    èƒ½ï¼šè¯»å–M1å¡ä¸€å—æ•°æ®
+//å‚æ•°è¯´æ˜: addr[IN]ï¼šå—åœ°å€
+//          pData[OUT]ï¼šè¯»å‡ºçš„æ•°æ®ï¼Œ16å­—èŠ‚
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK
 ///////////////////////////////////////////////////////////////////// 
 char MFRC522_Read(unsigned char addr,unsigned char *pData)
 {
@@ -561,10 +561,10 @@ char MFRC522_Read(unsigned char addr,unsigned char *pData)
 
 
 /////////////////////////////////////////////////////////////////////
-//¹¦    ÄÜ£ºĞ´Êı¾İµ½M1¿¨Ò»¿é
-//²ÎÊıËµÃ÷: addr[IN]£º¿éµØÖ·
-//          pData[IN]£ºĞ´ÈëµÄÊı¾İ£¬16×Ö½Ú
-//·µ    »Ø: ³É¹¦·µ»ØMI_OK
+//åŠŸ    èƒ½ï¼šå†™æ•°æ®åˆ°M1å¡ä¸€å—
+//å‚æ•°è¯´æ˜: addr[IN]ï¼šå—åœ°å€
+//          pData[IN]ï¼šå†™å…¥çš„æ•°æ®ï¼Œ16å­—èŠ‚
+//è¿”    å›: æˆåŠŸè¿”å›MI_OK
 /////////////////////////////////////////////////////////////////////                  
 char MFRC522_Write(unsigned char addr,unsigned char *pData)
 {
@@ -596,59 +596,59 @@ char MFRC522_Write(unsigned char addr,unsigned char *pData)
     return status;
 }
 
-/*********************************** ÒÔÏÂÊÇ×Ô¼º±àĞ´µÄ¿¨Æ¬¹ÜÀí²¿·Ö´úÂë ***********************************/
+/*********************************** ä»¥ä¸‹æ˜¯è‡ªå·±ç¼–å†™çš„å¡ç‰‡ç®¡ç†éƒ¨åˆ†ä»£ç  ***********************************/
 
 /**
   ****************************************************************************************************
   * @file        rc522.c
-  * @author      DylanChan(xiangyuzhan@foxmail.com)
+  * @author      DylanChan
   * @version     V1.0
   * @date        2025-06-23
-  * @brief       RC522¿¨Æ¬¹ÜÀíÏà¹Ø´úÂë
+  * @brief       RC522å¡ç‰‡ç®¡ç†ç›¸å…³ä»£ç 
   ****************************************************************************************************
   */
-unsigned char savedCards[MAX_SAVED_CARDS][6] = {0};  // ´æ´¢¿¨Æ¬Ãû(1×Ö½Ú)+ĞòÁĞºÅ(4×Ö½Ú)+¼¤»î×´Ì¬(1×Ö½Ú)
+unsigned char savedCards[MAX_SAVED_CARDS][6] = {0};  // å­˜å‚¨å¡ç‰‡å(1å­—èŠ‚)+åºåˆ—å·(4å­—èŠ‚)+æ¿€æ´»çŠ¶æ€(1å­—èŠ‚)
 unsigned char savedCardCount = 0;
 
 /**
-  * @brief     ±£´æ¿¨Æ¬ĞÅÏ¢
-  * @param     cardName[IN]£º¿¨Æ¬Ãû³Æ£¨µ¥×Ö½Ú×Ö·û£©
-  * @retval    MI_OK±íÊ¾³É¹¦±£´æ£¬MI_ERR±íÊ¾Ê§°Ü»òÒÑÂú
+  * @brief     ä¿å­˜å¡ç‰‡ä¿¡æ¯
+  * @param     cardName[IN]ï¼šå¡ç‰‡åç§°ï¼ˆå•å­—èŠ‚å­—ç¬¦ï¼‰
+  * @retval    MI_OKè¡¨ç¤ºæˆåŠŸä¿å­˜ï¼ŒMI_ERRè¡¨ç¤ºå¤±è´¥æˆ–å·²æ»¡
   */
 char Save_Card(unsigned char *cardName)
 {
     unsigned char buf[20];
     unsigned char status, i;
     
-    /* ¼ì²éÊÇ·ñÓĞ¿Õ¼ä */
+    /* æ£€æŸ¥æ˜¯å¦æœ‰ç©ºé—´ */
     if(savedCardCount >= MAX_SAVED_CARDS) 
         return MI_ERR;
     
-    /* Ñ°¿¨ */
+    /* å¯»å¡ */
     status = MFRC522_Request(PICC_REQALL, buf);
     if(status != MI_OK) return MI_ERR;
     
-    /* ·À³åÍ»»ñÈ¡ĞòÁĞºÅ */
+    /* é˜²å†²çªè·å–åºåˆ—å· */
     status = MFRC522_Anticoll(buf);
     if(status != MI_OK) return MI_ERR;
     
-    /* ¼ì²éÊÇ·ñÒÑ´æÔÚÏàÍ¬ĞòÁĞºÅ */
+    /* æ£€æŸ¥æ˜¯å¦å·²å­˜åœ¨ç›¸åŒåºåˆ—å· */
     for(i = 0; i < savedCardCount; i++) 
 	{
         if(buf[0] == savedCards[i][1] &&buf[1] == savedCards[i][2] &&
            buf[2] == savedCards[i][3] &&buf[3] == savedCards[i][4]) 
 		{
-            return MI_ERR; // ¿¨Æ¬ÒÑ´æÔÚ
+            return MI_ERR; // å¡ç‰‡å·²å­˜åœ¨
         }
     }
     
-    /* ±£´æ¿¨Æ¬ĞÅÏ¢ */
-    savedCards[savedCardCount][0] = *cardName;   // ¿¨Æ¬Ãû
-    savedCards[savedCardCount][1] = buf[0];     // ĞòÁĞºÅ×Ö½Ú1
-    savedCards[savedCardCount][2] = buf[1];     // ĞòÁĞºÅ×Ö½Ú2
-    savedCards[savedCardCount][3] = buf[2];     // ĞòÁĞºÅ×Ö½Ú3
-    savedCards[savedCardCount][4] = buf[3];     // ĞòÁĞºÅ×Ö½Ú4
-    savedCards[savedCardCount][5] = 1;          // ¼¤»î×´Ì¬
+    /* ä¿å­˜å¡ç‰‡ä¿¡æ¯ */
+    savedCards[savedCardCount][0] = *cardName;   // å¡ç‰‡å
+    savedCards[savedCardCount][1] = buf[0];     // åºåˆ—å·å­—èŠ‚1
+    savedCards[savedCardCount][2] = buf[1];     // åºåˆ—å·å­—èŠ‚2
+    savedCards[savedCardCount][3] = buf[2];     // åºåˆ—å·å­—èŠ‚3
+    savedCards[savedCardCount][4] = buf[3];     // åºåˆ—å·å­—èŠ‚4
+    savedCards[savedCardCount][5] = 1;          // æ¿€æ´»çŠ¶æ€
     
     savedCardCount++;
     
@@ -656,9 +656,9 @@ char Save_Card(unsigned char *cardName)
 }
 
 /**
-  * @brief     É¾³ı¿¨Æ¬ĞÅÏ¢
-  * @param     cardName[IN]£º¿¨Æ¬Ãû³Æ£¨µ¥×Ö½Ú×Ö·û£©
-  * @retval    MI_OK±íÊ¾³É¹¦É¾³ı£¬MI_ERR±íÊ¾Î´ÕÒµ½
+  * @brief     åˆ é™¤å¡ç‰‡ä¿¡æ¯
+  * @param     cardName[IN]ï¼šå¡ç‰‡åç§°ï¼ˆå•å­—èŠ‚å­—ç¬¦ï¼‰
+  * @retval    MI_OKè¡¨ç¤ºæˆåŠŸåˆ é™¤ï¼ŒMI_ERRè¡¨ç¤ºæœªæ‰¾åˆ°
   */
 char Delete_Card(unsigned char *cardName)
 {
@@ -668,10 +668,10 @@ char Delete_Card(unsigned char *cardName)
 	{
         if(savedCards[i][0] == *cardName) 
 		{
-            /* ÉèÖÃÉ¾³ı±êÖ¾ */
+            /* è®¾ç½®åˆ é™¤æ ‡å¿— */
             savedCards[i][5] = 0;
             
-            /* Èç¹ûÉ¾³ıµÄÊÇ×îºóÒ»¸ö£¬¼õÉÙ¼ÆÊı */
+            /* å¦‚æœåˆ é™¤çš„æ˜¯æœ€åä¸€ä¸ªï¼Œå‡å°‘è®¡æ•° */
             if(i == savedCardCount - 1) 
 			{
                 savedCardCount--;
@@ -679,31 +679,31 @@ char Delete_Card(unsigned char *cardName)
             return MI_OK;
         }
     }
-    return MI_ERR; // ¿¨Æ¬Î´ÕÒµ½
+    return MI_ERR; // å¡ç‰‡æœªæ‰¾åˆ°
 }
 
 /**
-  * @brief     Ê¶±ğ¿¨Æ¬
-  * @param     ÎŞ
-  * @retval    MI_OK±íÊ¾³É¹¦Ê¶±ğ£¬MI_ERR±íÊ¾Î´Ê¶±ğ
+  * @brief     è¯†åˆ«å¡ç‰‡
+  * @param     æ— 
+  * @retval    MI_OKè¡¨ç¤ºæˆåŠŸè¯†åˆ«ï¼ŒMI_ERRè¡¨ç¤ºæœªè¯†åˆ«
   */
 char Recognize_Card(void)
 {
     unsigned char buf[20];
     unsigned char status, i;
     
-    /* Ñ°¿¨ */
+    /* å¯»å¡ */
     status = MFRC522_Request(PICC_REQALL, buf);
     if(status != MI_OK) return MI_ERR;
     
-    /* ·À³åÍ»»ñÈ¡ĞòÁĞºÅ */
+    /* é˜²å†²çªè·å–åºåˆ—å· */
     status = MFRC522_Anticoll(buf);
     if(status != MI_OK) return MI_ERR;
     
-    /* ¼ì²éÊÇ·ñÔÚ±£´æµÄ¿¨Æ¬ÖĞ */
+    /* æ£€æŸ¥æ˜¯å¦åœ¨ä¿å­˜çš„å¡ç‰‡ä¸­ */
     for(i = 0; i < savedCardCount; i++) 
 	{
-		/* ¼ì²é¼¤»î×´Ì¬ */
+		/* æ£€æŸ¥æ¿€æ´»çŠ¶æ€ */
         if(savedCards[i][5] == 1 && buf[0] == savedCards[i][1] && buf[1] == savedCards[i][2] &&
            buf[2] == savedCards[i][3] && buf[3] == savedCards[i][4]) 
 		{
@@ -711,74 +711,74 @@ char Recognize_Card(void)
         }
     }
     
-    /* Î´Ê¶±ğµÄ¿¨Æ¬ */
+    /* æœªè¯†åˆ«çš„å¡ç‰‡ */
     return MI_ERR;
 }
 
 /**
-  * @brief      ¼ì²â¿¨Æ¬ÊÇ·ñ´æÔÚ¼°×´Ì¬
-  * @param[out] serial ÓÃÓÚ´æ´¢¼ì²âµ½µÄ¿¨Æ¬ĞòÁĞºÅµÄ»º³åÇø
-  * @retval     MI_OK       - ³É¹¦¼ì²âµ½ÓĞĞ§µÄ×¢²á¿¨Æ¬
-  *             MI_NOTAGERR - Î´¼ì²âµ½¿¨Æ¬»ò¿¨Æ¬Î´×¢²á
-  *             MI_ERR      - Í¨ĞÅ´íÎó
-  * @note       ¸Ãº¯ÊıÄÚ²¿ÊµÏÖÊ±¼ä¼ä¸ô¿ØÖÆ£¬±ÜÃâÆµ·±ÂÖÑ¯
+  * @brief      æ£€æµ‹å¡ç‰‡æ˜¯å¦å­˜åœ¨åŠçŠ¶æ€
+  * @param[out] serial ç”¨äºå­˜å‚¨æ£€æµ‹åˆ°çš„å¡ç‰‡åºåˆ—å·çš„ç¼“å†²åŒº
+  * @retval     MI_OK       - æˆåŠŸæ£€æµ‹åˆ°æœ‰æ•ˆçš„æ³¨å†Œå¡ç‰‡
+  *             MI_NOTAGERR - æœªæ£€æµ‹åˆ°å¡ç‰‡æˆ–å¡ç‰‡æœªæ³¨å†Œ
+  *             MI_ERR      - é€šä¿¡é”™è¯¯
+  * @note       è¯¥å‡½æ•°å†…éƒ¨å®ç°æ—¶é—´é—´éš”æ§åˆ¶ï¼Œé¿å…é¢‘ç¹è½®è¯¢
   */
 char RC522_DetectCard(unsigned char *serial)
 {
-    unsigned char temp_serial[4];       // ÁÙÊ±´æ´¢µ±Ç°¶Áµ½µÄĞòÁĞºÅ
-    unsigned char base_serial[4] = {0}; // ´æ´¢»ù×¼ĞòÁĞºÅ
-    unsigned char same_count = 0;       // ÏàÍ¬ĞòÁĞºÅ¼ÆÊı
+    unsigned char temp_serial[4];       // ä¸´æ—¶å­˜å‚¨å½“å‰è¯»åˆ°çš„åºåˆ—å·
+    unsigned char base_serial[4] = {0}; // å­˜å‚¨åŸºå‡†åºåˆ—å·
+    unsigned char same_count = 0;       // ç›¸åŒåºåˆ—å·è®¡æ•°
     
     for (int i = 0; i < 5; i++) 
 	{
-        /* ¼ì²â¿¨Æ¬´æÔÚĞÔ */
+        /* æ£€æµ‹å¡ç‰‡å­˜åœ¨æ€§ */
         char status = MFRC522_Request(PICC_REQALL, temp_serial);
         if (status != MI_OK) {
-            /* ÇëÇóÊ§°Ü£¬¿ÉÄÜÊÇÎŞ¿¨»òÍ¨ĞÅ´íÎó */
+            /* è¯·æ±‚å¤±è´¥ï¼Œå¯èƒ½æ˜¯æ— å¡æˆ–é€šä¿¡é”™è¯¯ */
             Delay_ms(200);
             continue;
         }
         
-        /* »ñÈ¡¾«È·ĞòÁĞºÅ */
+        /* è·å–ç²¾ç¡®åºåˆ—å· */
         status = MFRC522_Anticoll(temp_serial);
         if (status != MI_OK) {
-            /* ·À³åÍ»Ê§°Ü£¬Ìø¹ı±¾´Î */
+            /* é˜²å†²çªå¤±è´¥ï¼Œè·³è¿‡æœ¬æ¬¡ */
             continue;
         }
         
-        /* ĞòÁĞºÅ±È½ÏÂß¼­ */
+        /* åºåˆ—å·æ¯”è¾ƒé€»è¾‘ */
         if (i == 0) 
 		{
-            /* µÚÒ»´Î³É¹¦¶ÁÈ¡£¬ÉèÖÃÎª»ù×¼ĞòÁĞºÅ */
+            /* ç¬¬ä¸€æ¬¡æˆåŠŸè¯»å–ï¼Œè®¾ç½®ä¸ºåŸºå‡†åºåˆ—å· */
             memcpy(base_serial, temp_serial, 4);
             same_count = 1;
         } 
         else if (memcmp(base_serial, temp_serial, 4) == 0) 
 		{
-            /* Óë»ù×¼ĞòÁĞºÅÏàÍ¬ */
+            /* ä¸åŸºå‡†åºåˆ—å·ç›¸åŒ */
             same_count++;
         } 
         else 
 		{
-            /* ĞòÁĞºÅ±ä»¯£¬ÖØÖÃ¼ÆÊı */
+            /* åºåˆ—å·å˜åŒ–ï¼Œé‡ç½®è®¡æ•° */
             memcpy(base_serial, temp_serial, 4);
             same_count = 1;
         }
         
-        /* ¼ì²éÊÇ·ñÁ¬Ğø5´ÎÏàÍ¬ */
+        /* æ£€æŸ¥æ˜¯å¦è¿ç»­5æ¬¡ç›¸åŒ */
         if (same_count >= 5) 
 		{
             memcpy(serial, base_serial, 4);
-            return MI_OK; // ³É¹¦¼ì²âµ½ÎÈ¶¨¿¨ºÅ
+            return MI_OK; // æˆåŠŸæ£€æµ‹åˆ°ç¨³å®šå¡å·
         }
     }
-    /* Î´¼ì²âµ½ÎÈ¶¨¿¨ºÅ */
+    /* æœªæ£€æµ‹åˆ°ç¨³å®šå¡å· */
     return MI_NOTAGERR; 
 }
 
 /**
-  * @brief ¶¨ÆÚ¼ì²â¿¨Æ¬×´Ì¬
-  * @note  ÔÚÖ÷Ñ­»·ÖĞ¶¨ÆÚµ÷ÓÃ£¨Ã¿200-500ms£©
+  * @brief å®šæœŸæ£€æµ‹å¡ç‰‡çŠ¶æ€
+  * @note  åœ¨ä¸»å¾ªç¯ä¸­å®šæœŸè°ƒç”¨ï¼ˆæ¯200-500msï¼‰
   */
 unsigned char cardSerial[4] = {0};
 CardDetectStatus cardStatus = CARD_NONE;
@@ -786,19 +786,19 @@ CardDetectStatus cardStatus = CARD_NONE;
 void RC522_PeriodicCheck(void)
 {
     static uint32_t lastCheck = 0;
-    const uint32_t checkInterval = 300;		// Ã¿300ms¼ì²éÒ»´Î
+    const uint32_t checkInterval = 300;		// æ¯300msæ£€æŸ¥ä¸€æ¬¡
     
     if(Delay_GetTickCount() - lastCheck < checkInterval) 
 	{
-        return; // Î´µ½¼ì²éÊ±¼ä
+        return; // æœªåˆ°æ£€æŸ¥æ—¶é—´
     }
     
     lastCheck = Delay_GetTickCount();
     
 	static uint8_t stableCount = 0;
-    const uint8_t requireStableCount = 3;	// ĞèÒªÁ¬Ğø3´Î¼ì²âÒ»ÖÂ
+    const uint8_t requireStableCount = 3;	// éœ€è¦è¿ç»­3æ¬¡æ£€æµ‹ä¸€è‡´
 	
-    /* ÁÙÊ±´æ´¢±¾´Î¼ì²â½á¹û */
+    /* ä¸´æ—¶å­˜å‚¨æœ¬æ¬¡æ£€æµ‹ç»“æœ */
     CardDetectStatus currentStatus;
     unsigned char tempSerial[4];
     
@@ -813,17 +813,17 @@ void RC522_PeriodicCheck(void)
         currentStatus = CARD_NONE;
     }
     
-    /* ×´Ì¬ÎÈ¶¨ÅĞ¶Ï */
+    /* çŠ¶æ€ç¨³å®šåˆ¤æ–­ */
     if(currentStatus == cardStatus) 
     {
         stableCount++;
     } 
     else 
     {
-        stableCount = 0; // ×´Ì¬±ä»¯£¬ÖØÖÃÎÈ¶¨¼ÆÊıÆ÷
+        stableCount = 0; // çŠ¶æ€å˜åŒ–ï¼Œé‡ç½®ç¨³å®šè®¡æ•°å™¨
     }
     
-    /* ´ïµ½ÎÈ¶¨ÒªÇó²Å¸üĞÂÈ«¾Ö×´Ì¬ */
+    /* è¾¾åˆ°ç¨³å®šè¦æ±‚æ‰æ›´æ–°å…¨å±€çŠ¶æ€ */
     if(stableCount >= requireStableCount) 
     {
         cardStatus = currentStatus;
@@ -833,8 +833,8 @@ void RC522_PeriodicCheck(void)
 }
 
 /**
-  * @brief  »ñÈ¡¿¨Æ¬¼ì²â×´Ì¬
-  * @retval CardDetectStatus ¿¨Æ¬×´Ì¬
+  * @brief  è·å–å¡ç‰‡æ£€æµ‹çŠ¶æ€
+  * @retval CardDetectStatus å¡ç‰‡çŠ¶æ€
   */
 CardDetectStatus GetCardDetectStatus(void)
 {
@@ -842,42 +842,42 @@ CardDetectStatus GetCardDetectStatus(void)
 }
 
 /**
-  * @brief  »ñÈ¡¿¨Æ¬×´Ì¬ÃèÊö
-  * @retval ×´Ì¬ÃèÊö×Ö·û´®
+  * @brief  è·å–å¡ç‰‡çŠ¶æ€æè¿°
+  * @retval çŠ¶æ€æè¿°å­—ç¬¦ä¸²
   */
 const char* GetCardStatusString(void)
 {
     switch(cardStatus) 
 	{
-        case CARD_DETECTED: return "¼ì²âµ½¿¨Æ¬";
-        case CARD_NONE:     return "¿¨Æ¬Î´ÕÒµ½";
-        case CARD_ERROR:    return "¿¨Æ¬¼ì²â´íÎó";
-        default:            return "Î´Öª×´Ì¬";
+        case CARD_DETECTED: return "æ£€æµ‹åˆ°å¡ç‰‡";
+        case CARD_NONE:     return "å¡ç‰‡æœªæ‰¾åˆ°";
+        case CARD_ERROR:    return "å¡ç‰‡æ£€æµ‹é”™è¯¯";
+        default:            return "æœªçŸ¥çŠ¶æ€";
     }
 }
 
 /**
-  * @brief µ¥´Î¿¨Æ¬¼ì²â
-  * @param serial ÓÃÓÚ´æ´¢¼ì²âµ½µÄ¿¨Æ¬ĞòÁĞºÅµÄ»º³åÇø
-  * @retval MI_OK: ¼ì²âµ½¿¨Æ¬, MI_NOTAGERR: Î´¼ì²âµ½¿¨Æ¬, MI_ERR: Í¨ĞÅ´íÎó
+  * @brief å•æ¬¡å¡ç‰‡æ£€æµ‹
+  * @param serial ç”¨äºå­˜å‚¨æ£€æµ‹åˆ°çš„å¡ç‰‡åºåˆ—å·çš„ç¼“å†²åŒº
+  * @retval MI_OK: æ£€æµ‹åˆ°å¡ç‰‡, MI_NOTAGERR: æœªæ£€æµ‹åˆ°å¡ç‰‡, MI_ERR: é€šä¿¡é”™è¯¯
   */
 char RC522_SingleDetectCard(unsigned char *serial)
 {
-    unsigned char temp_serial[4];	// ÁÙÊ±´æ´¢µ±Ç°¶Áµ½µÄĞòÁĞºÅ
+    unsigned char temp_serial[4];	// ä¸´æ—¶å­˜å‚¨å½“å‰è¯»åˆ°çš„åºåˆ—å·
     
-    /* ¼ì²â¿¨Æ¬´æÔÚĞÔ */
+    /* æ£€æµ‹å¡ç‰‡å­˜åœ¨æ€§ */
     char status = MFRC522_Request(PICC_REQALL, temp_serial);
     if(status != MI_OK) {
-        return MI_NOTAGERR;			// ÇëÇóÊ§°Ü£¬¿ÉÄÜÊÇÎŞ¿¨»òÍ¨ĞÅ´íÎó
+        return MI_NOTAGERR;			// è¯·æ±‚å¤±è´¥ï¼Œå¯èƒ½æ˜¯æ— å¡æˆ–é€šä¿¡é”™è¯¯
     }
     
-    /* »ñÈ¡¾«È·ĞòÁĞºÅ */
+    /* è·å–ç²¾ç¡®åºåˆ—å· */
     status = MFRC522_Anticoll(temp_serial);
     if(status != MI_OK) {
-        return MI_NOTAGERR;			// ·À³åÍ»Ê§°Ü
+        return MI_NOTAGERR;			// é˜²å†²çªå¤±è´¥
     }
     
-    /* ¸´ÖÆĞòÁĞºÅ */
+    /* å¤åˆ¶åºåˆ—å· */
     memcpy(serial, temp_serial, 4);
     return MI_OK;
 }
