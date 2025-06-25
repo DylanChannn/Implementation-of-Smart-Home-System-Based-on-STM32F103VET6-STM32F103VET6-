@@ -1,12 +1,12 @@
 /****************************************************************************************************
  * @file    cloudbemfa.h
- * @brief   °Í·¨ÔÆÎïÁªÍøÆ½Ì¨Í¨ĞÅÄ£¿éµÄÍ·ÎÄ¼ş
- * @details ÊµÏÖ°Í·¨ÔÆMQTTĞ­ÒéµÄÁ¬½Ó¡¢¶©ÔÄ¡¢·¢²¼¼°Éè±¸¿ØÖÆ¹¦ÄÜ
- * @note    °üº¬WiFiÁ¬½Ó¡¢MQTTĞ­Òé·â×°¡¢Éè±¸×´Ì¬ÉÏ±¨Óë¿ØÖÆ¹¦ÄÜ
+ * @brief   å·´æ³•äº‘ç‰©è”ç½‘å¹³å°é€šä¿¡æ¨¡å—çš„å¤´æ–‡ä»¶
+ * @details å®ç°å·´æ³•äº‘MQTTåè®®çš„è¿æ¥ã€è®¢é˜…ã€å‘å¸ƒåŠè®¾å¤‡æ§åˆ¶åŠŸèƒ½
+ * @note    åŒ…å«WiFiè¿æ¥ã€MQTTåè®®å°è£…ã€è®¾å¤‡çŠ¶æ€ä¸ŠæŠ¥ä¸æ§åˆ¶åŠŸèƒ½
  * @version V1.2
- * @date    2024-03-21 ³õ°æ
- *         2024-06-21 ĞŞ¸ÄÔöÇ¿£ºÔö¼ÓÎÂÊª¶È/ÑÌÎí´«¸ĞÆ÷Êı¾İÉÏ±¨¡¢µç»ú¿ØÖÆÂß¼­ÓÅ»¯
- * @author  DylanChan(xiangyuzhan@foxmail.com)
+ * @date    2024-03-21 åˆç‰ˆ
+ *         2024-06-21 ä¿®æ”¹å¢å¼ºï¼šå¢åŠ æ¸©æ¹¿åº¦/çƒŸé›¾ä¼ æ„Ÿå™¨æ•°æ®ä¸ŠæŠ¥ã€ç”µæœºæ§åˆ¶é€»è¾‘ä¼˜åŒ–
+ * @author  DylanChan
  ****************************************************************************************************/
 #ifndef _CLOUDBEMFA_H_
 #define _CLOUDBEMFA_H_
@@ -21,11 +21,11 @@ typedef struct{
 	uint16_t ServerPort;
 }_CloudIOT_Connect;
 
-extern uint8_t bemfaConfigured;       // °Í·¨ÔÆÅäÖÃ±êÖ¾
-extern uint32_t lastCloudTick;        // ÔÆÆ½Ì¨Êı¾İ¸üĞÂÊ±¼ä´Á
-extern _CloudIOT_Connect BemfaData;   // °Í·¨ÔÆÊı¾İ½á¹¹
+extern uint8_t bemfaConfigured;       // å·´æ³•äº‘é…ç½®æ ‡å¿—
+extern uint32_t lastCloudTick;        // äº‘å¹³å°æ•°æ®æ›´æ–°æ—¶é—´æˆ³
+extern _CloudIOT_Connect BemfaData;   // å·´æ³•äº‘æ•°æ®ç»“æ„
 
-//Ë½Ô¿
+//ç§é’¥
 #define Cloud_MyselfPassword 	"d8179d9f61fc4435b12d79f6ac16349b"
 #define SubscribeLED0_TOPIC 	"LEDA002"
 #define SubscribeTEMHUM_TOPIC 	"TemHum004"
@@ -37,7 +37,7 @@ void Bemfa_Config(void);
 void Bemfa_DataConfig(void);
 uint8_t Bemfa_ConnetServer(char* TCP_IP,char* IP,uint16_t PORT);
 
-//MQTTÏà¹ØAPI
+//MQTTç›¸å…³API
 void MQTT_ConnectBemfa(void);
 uint8_t MQTT_SetSendData(void);
 void MQTT_ConnectPack(void);
