@@ -1,7 +1,7 @@
 /**
  ****************************************************************************************************
  * @file        Motor.c
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-20
  * @brief       电机控制模块：包含PWM初始化、速度控制、状态机及按键处理功能
