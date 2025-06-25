@@ -1,13 +1,13 @@
 /****************************************************************************************************
  * @file    cloudbemfa.c
- * @brief   °Í·¨ÔÆÎïÁªÍøÆ½Ì¨Í¨ĞÅÄ£¿é
- * @details ÊµÏÖ°Í·¨ÔÆMQTTĞ­ÒéµÄÁ¬½Ó¡¢¶©ÔÄ¡¢·¢²¼¼°Éè±¸¿ØÖÆ¹¦ÄÜ
- * @note    °üº¬WiFiÁ¬½Ó¡¢MQTTĞ­Òé·â×°¡¢Éè±¸×´Ì¬ÉÏ±¨Óë¿ØÖÆ¹¦ÄÜ
+ * @brief   å·´æ³•äº‘ç‰©è”ç½‘å¹³å°é€šä¿¡æ¨¡å—
+ * @details å®ç°å·´æ³•äº‘MQTTåè®®çš„è¿æ¥ã€è®¢é˜…ã€å‘å¸ƒåŠè®¾å¤‡æ§åˆ¶åŠŸèƒ½
+ * @note    åŒ…å«WiFiè¿æ¥ã€MQTTåè®®å°è£…ã€è®¾å¤‡çŠ¶æ€ä¸ŠæŠ¥ä¸æ§åˆ¶åŠŸèƒ½
  * @version V1.2
- * @date    2024-03-21 ³õ°æ
- * @author  ÓÃ»§Ãû
- * @data	2024-06-21 ĞŞ¸ÄÔöÇ¿£ºÔö¼ÓÎÂÊª¶È/ÑÌÎí´«¸ĞÆ÷Êı¾İÉÏ±¨¡¢µç»ú¿ØÖÆÂß¼­ÓÅ»¯
- * @author  DylanChan(xiangyuzhan@foxmail.com)
+ * @date    2024-03-21 åˆç‰ˆ
+ * @author  ç”¨æˆ·å
+ * @data	2024-06-21 ä¿®æ”¹å¢å¼ºï¼šå¢åŠ æ¸©æ¹¿åº¦/çƒŸé›¾ä¼ æ„Ÿå™¨æ•°æ®ä¸ŠæŠ¥ã€ç”µæœºæ§åˆ¶é€»è¾‘ä¼˜åŒ–
+ * @author  DylanChan
  *****************************************************************************************************
  */
 #include "menu.h"
@@ -22,29 +22,29 @@
 #include "MQ2.h"
 #include "st7789.h"
 
-extern MenuState currentMenu;  // ´Ómenu.hÒıÓÃµÄµ±Ç°²Ëµ¥×´Ì¬
+extern MenuState currentMenu;  // ä»menu.hå¼•ç”¨çš„å½“å‰èœå•çŠ¶æ€
 
-int   Fixed_len;      //¹Ì¶¨±¨Í·³¤¶È
-int   Variable_len;   //¿É±ä±¨Í·³¤¶È
-int   Payload_len;    //ÓĞĞ§¸ººÉ³¤¶È
+int   Fixed_len;      //å›ºå®šæŠ¥å¤´é•¿åº¦
+int   Variable_len;   //å¯å˜æŠ¥å¤´é•¿åº¦
+int   Payload_len;    //æœ‰æ•ˆè´Ÿè·é•¿åº¦
 
 /**
-  * @brief °Í·¨ÔÆÁ¬½ÓÅäÖÃ
-  * @param ÎŞ
-  * @note  Ö´ĞĞÁ÷³Ì£º
-  *        1. ÅäÖÃÁ¬½Ó²ÎÊı£¨·şÎñÆ÷µØÖ·¡¢¶Ë¿Ú¡¢¿Í»§¶ËID£©
-  *        2. ½¨Á¢TCPÁ¬½Ó
-  *        3. ³õÊ¼»¯MQTTÁ¬½Ó²¢¶©ÔÄÖ÷Ìâ
-  * @retval ÎŞ
+  * @brief å·´æ³•äº‘è¿æ¥é…ç½®
+  * @param æ— 
+  * @note  æ‰§è¡Œæµç¨‹ï¼š
+  *        1. é…ç½®è¿æ¥å‚æ•°ï¼ˆæœåŠ¡å™¨åœ°å€ã€ç«¯å£ã€å®¢æˆ·ç«¯IDï¼‰
+  *        2. å»ºç«‹TCPè¿æ¥
+  *        3. åˆå§‹åŒ–MQTTè¿æ¥å¹¶è®¢é˜…ä¸»é¢˜
+  * @retval æ— 
   */
 void Bemfa_Config(void)
 {
-	Bemfa_DataConfig();	//Á´½Ó²ÎÊı
-	/* Á´½Ó·şÎñÆ÷ */
+	Bemfa_DataConfig();	//é“¾æ¥å‚æ•°
+	/* é“¾æ¥æœåŠ¡å™¨ */
 	if(Bemfa_ConnetServer("TCP",BemfaData.ServerIP,BemfaData.ServerPort))
 	{
-		/* Á¬½Ó°Í·¨ÔÆÉè±¸ */
-		MQTT_ConnectBemfa();//·¢ËÍ±¨ÎÄ--Í¸´«Ä£Ê½
+		/* è¿æ¥å·´æ³•äº‘è®¾å¤‡ */
+		MQTT_ConnectBemfa();//å‘é€æŠ¥æ–‡--é€ä¼ æ¨¡å¼
 	}
 	else
 		printf("link Server fail\r\n");
@@ -54,17 +54,17 @@ void Bemfa_DataConfig(void)
 {
 	memset(&BemfaData,0,sizeof(_CloudIOT_Connect));  
 	
-	/* »ñÈ¡ClientID */
+	/* è·å–ClientID */
 	strcpy(BemfaData.ClientID,Cloud_MyselfPassword);
 	BemfaData.ClientID_len = strlen(BemfaData.ClientID);
-	/* »ñÈ¡·şÎñÆ÷IPµØÖ·¡¢¶Ë¿ÚºÅ */
-	strcpy(BemfaData.ServerIP,"bemfa.com");                 //¹¹½¨·şÎñÆ÷ÓòÃû
+	/* è·å–æœåŠ¡å™¨IPåœ°å€ã€ç«¯å£å· */
+	strcpy(BemfaData.ServerIP,"bemfa.com");                 //æ„å»ºæœåŠ¡å™¨åŸŸå
 	BemfaData.ServerPort = 9501;
 
-	/* ´®¿ÚÊä³öµ÷ÊÔĞÅÏ¢ */
+	/* ä¸²å£è¾“å‡ºè°ƒè¯•ä¿¡æ¯ */
 	ST7789_Clear(BLACK);
-	printf("·şÎñÆ÷£º%s:%d\r\n",BemfaData.ServerIP,BemfaData.ServerPort);  
-	ST7789_ShowString(30, 30, BLACK, WHITE, "·şÎñÆ÷bemfa.com 9501");
+	printf("æœåŠ¡å™¨ï¼š%s:%d\r\n",BemfaData.ServerIP,BemfaData.ServerPort);  
+	ST7789_ShowString(30, 30, BLACK, WHITE, "æœåŠ¡å™¨bemfa.com 9501");
 }
 
 uint8_t Bemfa_ConnetServer(char* TCP_IP,char* IP,uint16_t PORT)
@@ -72,10 +72,10 @@ uint8_t Bemfa_ConnetServer(char* TCP_IP,char* IP,uint16_t PORT)
 	uint8_t Timers = 2;
 	uint8_t SendData_Buf[128] = "\0";
 	
-//	LED_CloseTransmission();                   //¶à´ÎÁ¬½ÓĞèÍË³öÍ¸´«
+//	LED_CloseTransmission();                   //å¤šæ¬¡è¿æ¥éœ€é€€å‡ºé€ä¼ 
   Delay_ms(500);
 	
-	/* Á¬½Ó·şÎñÆ÷ */
+	/* è¿æ¥æœåŠ¡å™¨ */
 	while(Timers--)
 	{       
 		//AT+CIPSTART="TCP","bemfa.com",9501\r\n
@@ -92,30 +92,30 @@ uint8_t Bemfa_ConnetServer(char* TCP_IP,char* IP,uint16_t PORT)
 
 void MQTT_ConnectBemfa(void)
 {
-	/* ÉèÖÃÊı¾İÍ¸´« */
+	/* è®¾ç½®æ•°æ®é€ä¼  */
 	if(MQTT_SetSendData())
 	{
 		ST7789_Clear(BLACK);
-		printf("Êı¾İÍ¸´«\r\n");
-		ST7789_ShowString(30, 30, BLACK, WHITE, "Êı¾İÍ¸´«");
-		MQTT_ConnectPack();//Á¬½Ó·şÎñÆ÷
+		printf("æ•°æ®é€ä¼ \r\n");
+		ST7789_ShowString(30, 30, BLACK, WHITE, "æ•°æ®é€ä¼ ");
+		MQTT_ConnectPack();//è¿æ¥æœåŠ¡å™¨
 		Delay_ms(2000);
 		
-		/* ¶©ÔÄÃ¿¸öÖ÷Ìâ */
+		/* è®¢é˜…æ¯ä¸ªä¸»é¢˜ */
 		MQTT_Subscribe(SubscribeLED0_TOPIC,0);
-		ST7789_ShowString(50, 40, BLACK, YELLOW, "¶©ÔÄµÆ¹âÖĞ");
+		ST7789_ShowString(50, 40, BLACK, YELLOW, "è®¢é˜…ç¯å…‰ä¸­");
 		Delay_ms(2000);
 		MQTT_Subscribe(SubscribeTEMHUM_TOPIC,0);
-		ST7789_ShowString(50, 40, WHITE, BLUE, "¶©ÔÄÎÂÊª¶ÈÖĞ");
+		ST7789_ShowString(50, 40, WHITE, BLUE, "è®¢é˜…æ¸©æ¹¿åº¦ä¸­");
 		Delay_ms(2000);
 		MQTT_Subscribe(SubscribeMOTOR_TOPIC,0);
-		ST7789_ShowString(50, 40, WHITE, LIGHTBLUE, " ¶©ÔÄ´°Á±ÖĞ ");
+		ST7789_ShowString(50, 40, WHITE, LIGHTBLUE, " è®¢é˜…çª—å¸˜ä¸­ ");
 		Delay_ms(2000);
 		MQTT_Subscribe(SubscribeGAS_TOPIC,0);
-		ST7789_ShowString(50, 40, WHITE, BROWN, "¶©ÔÄÑÌÎí´«¸ĞÆ÷ÖĞ");
+		ST7789_ShowString(50, 40, WHITE, BROWN, "è®¢é˜…çƒŸé›¾ä¼ æ„Ÿå™¨ä¸­");
 		Delay_ms(2000);
 		MQTT_Subscribe(SubscribeDOOR_TOPIC,0);
-		ST7789_ShowString(50, 40, BLACK, LGRAYBLUE, "  ¶©ÔÄ¿ª¹ØÃÅÖĞ  ");
+		ST7789_ShowString(50, 40, BLACK, LGRAYBLUE, "  è®¢é˜…å¼€å…³é—¨ä¸­  ");
 		Delay_ms(2000);
 		ST7789_Clear(BLACK);
 	}
@@ -126,14 +126,14 @@ void MQTT_ConnectBemfa(void)
 uint8_t MQTT_SetSendData(void)
 {
 	uint8_t Timers = 4;
-	/* ÉèÖÃÍ¸´«Ä£Ê½ */
+	/* è®¾ç½®é€ä¼ æ¨¡å¼ */
 	if(OpenTransmission()==0) return 0;
 	printf("OpenTransmission\r\n");
 	Delay_ms(300);
-	/* ¿ªÆô·¢ËÍ×´Ì¬ */
+	/* å¼€å¯å‘é€çŠ¶æ€ */
 	while(Timers--)
 	{ 
-		ESP8266_SendStr("AT+CIPSEND\r\n");//¿ªÊ¼´¦ÓÚÍ¸´«·¢ËÍ×´Ì¬
+		ESP8266_SendStr("AT+CIPSEND\r\n");//å¼€å§‹å¤„äºé€ä¼ å‘é€çŠ¶æ€
 		if(FindStr((char*)Wifi_Data.Rx_buf,">",400)!=0)
 		{
 			printf("CIP Send OK\r\n");
@@ -147,116 +147,116 @@ uint8_t MQTT_SetSendData(void)
 void MQTT_ConnectPack(void)
 {
 	uint8_t SendConnect_buf[512] = "\0"; 
-	Fixed_len = 2;                                                        //Á¬½Ó±¨ÎÄÖĞ£¬¹Ì¶¨±¨Í·³¤¶È=2
-	Variable_len = 10;                                                    //Á¬½Ó±¨ÎÄÖĞ£¬¿É±ä±¨Í·³¤¶È=10
+	Fixed_len = 2;                                                        //è¿æ¥æŠ¥æ–‡ä¸­ï¼Œå›ºå®šæŠ¥å¤´é•¿åº¦=2
+	Variable_len = 10;                                                    //è¿æ¥æŠ¥æ–‡ä¸­ï¼Œå¯å˜æŠ¥å¤´é•¿åº¦=10
 	Payload_len = 2 + BemfaData.ClientID_len;       
 
-	SendConnect_buf[0]=0x10;                              	//µÚ1¸ö×Ö½Ú £º¹Ì¶¨0x10	
-	SendConnect_buf[1]=Variable_len + Payload_len;        	//µÚ2¸ö×Ö½Ú £º¿É±ä±¨Í·+ÓĞĞ§¸ººÉµÄ³¤¶È£¬³¤¶ÈĞ¡ÓÚ127
-	SendConnect_buf[2]=0x00;          					  	//µÚ3¸ö×Ö½Ú £º¹Ì¶¨0x00	            
-	SendConnect_buf[3]=0x04;                				//µÚ4¸ö×Ö½Ú £º¹Ì¶¨0x04
-	SendConnect_buf[4]=0x4D;								//µÚ5¸ö×Ö½Ú £º¹Ì¶¨0x4D
-	SendConnect_buf[5]=0x51;								//µÚ6¸ö×Ö½Ú £º¹Ì¶¨0x51
-	SendConnect_buf[6]=0x54;								//µÚ7¸ö×Ö½Ú £º¹Ì¶¨0x54
-	SendConnect_buf[7]=0x54;								//µÚ8¸ö×Ö½Ú £º¹Ì¶¨0x54
-	SendConnect_buf[8]=0x04;								//µÚ9¸ö×Ö½Ú £º¹Ì¶¨0x04
-	SendConnect_buf[9]=0x02;								//µÚ10¸ö×Ö½Ú£º²»Ê¹ÓÃÒÅÖö£¬²»±£Áô»á»°
-	SendConnect_buf[10]=0x00; 						  		//µÚ11¸ö×Ö½Ú£º±£»îÊ±¼ä¸ß×Ö½Ú 0x00
-	SendConnect_buf[11]=0x64;								//µÚ12¸ö×Ö½Ú£º±£»îÊ±¼ä¸ß×Ö½Ú 0x64   100s
+	SendConnect_buf[0]=0x10;                              	//ç¬¬1ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x10	
+	SendConnect_buf[1]=Variable_len + Payload_len;        	//ç¬¬2ä¸ªå­—èŠ‚ ï¼šå¯å˜æŠ¥å¤´+æœ‰æ•ˆè´Ÿè·çš„é•¿åº¦ï¼Œé•¿åº¦å°äº127
+	SendConnect_buf[2]=0x00;          					  	//ç¬¬3ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x00	            
+	SendConnect_buf[3]=0x04;                				//ç¬¬4ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x04
+	SendConnect_buf[4]=0x4D;								//ç¬¬5ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x4D
+	SendConnect_buf[5]=0x51;								//ç¬¬6ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x51
+	SendConnect_buf[6]=0x54;								//ç¬¬7ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x54
+	SendConnect_buf[7]=0x54;								//ç¬¬8ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x54
+	SendConnect_buf[8]=0x04;								//ç¬¬9ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x04
+	SendConnect_buf[9]=0x02;								//ç¬¬10ä¸ªå­—èŠ‚ï¼šä¸ä½¿ç”¨é—å˜±ï¼Œä¸ä¿ç•™ä¼šè¯
+	SendConnect_buf[10]=0x00; 						  		//ç¬¬11ä¸ªå­—èŠ‚ï¼šä¿æ´»æ—¶é—´é«˜å­—èŠ‚ 0x00
+	SendConnect_buf[11]=0x64;								//ç¬¬12ä¸ªå­—èŠ‚ï¼šä¿æ´»æ—¶é—´é«˜å­—èŠ‚ 0x64   100s
 	
 	/*     CLIENT_ID      */
-	SendConnect_buf[12] = BemfaData.ClientID_len/256;                			  			//¿Í»§¶ËID³¤¶È¸ß×Ö½Ú
-	SendConnect_buf[13] = BemfaData.ClientID_len%256;               			  			//¿Í»§¶ËID³¤¶ÈµÍ×Ö½Ú
-	memcpy(&SendConnect_buf[14],BemfaData.ClientID,BemfaData.ClientID_len);                 //¸´ÖÆ¹ıÀ´¿Í»§¶ËID×Ö´®	
-	ESP8266_SendBuf(SendConnect_buf, Fixed_len + Variable_len + Payload_len);      			//¼ÓÈë·¢ËÍÊı¾İ»º³åÇø
-	printf("Á¬½Ó·şÎñÆ÷³É¹¦\r\n");
-	ST7789_ShowString(30, 30, BLACK, WHITE, "Á¬½Ó·şÎñÆ÷³É¹¦£¡");
+	SendConnect_buf[12] = BemfaData.ClientID_len/256;                			  			//å®¢æˆ·ç«¯IDé•¿åº¦é«˜å­—èŠ‚
+	SendConnect_buf[13] = BemfaData.ClientID_len%256;               			  			//å®¢æˆ·ç«¯IDé•¿åº¦ä½å­—èŠ‚
+	memcpy(&SendConnect_buf[14],BemfaData.ClientID,BemfaData.ClientID_len);                 //å¤åˆ¶è¿‡æ¥å®¢æˆ·ç«¯IDå­—ä¸²	
+	ESP8266_SendBuf(SendConnect_buf, Fixed_len + Variable_len + Payload_len);      			//åŠ å…¥å‘é€æ•°æ®ç¼“å†²åŒº
+	printf("è¿æ¥æœåŠ¡å™¨æˆåŠŸ\r\n");
+	ST7789_ShowString(30, 30, BLACK, WHITE, "è¿æ¥æœåŠ¡å™¨æˆåŠŸï¼");
 	Delay_ms(1000);
 	ST7789_Clear(BLACK);
 }
 
 /************************
-º¯ÊıÃû³Æ£ºMQTT_Subscribe
-º¯Êı×÷ÓÃ£ºSUBSCRIBE¶©ÔÄtopic±¨ÎÄ
-º¯ÊıÈë¿Ú£º
-		topic_name£º	¶©ÔÄtopic±¨ÎÄÃû³Æ
-		QoS£º					¶©ÔÄµÈ¼¶ 
-º¯Êı³ö¿Ú£ºÎŞ
-º¯Êı×÷Õß£º
-´´½¨Ê±¼ä£º2024.03.21
-ĞŞ¸ÄÊ±¼ä£º2024.03.21
+å‡½æ•°åç§°ï¼šMQTT_Subscribe
+å‡½æ•°ä½œç”¨ï¼šSUBSCRIBEè®¢é˜…topicæŠ¥æ–‡
+å‡½æ•°å…¥å£ï¼š
+		topic_nameï¼š	è®¢é˜…topicæŠ¥æ–‡åç§°
+		QoSï¼š					è®¢é˜…ç­‰çº§ 
+å‡½æ•°å‡ºå£ï¼šæ— 
+å‡½æ•°ä½œè€…ï¼š
+åˆ›å»ºæ—¶é—´ï¼š2024.03.21
+ä¿®æ”¹æ—¶é—´ï¼š2024.03.21
 ************************/
 void MQTT_Subscribe(char *topic_name, int QoS)
 {	
 	uint8_t SendSubscribe_buf[512] = "\0"; 
-	Fixed_len = 2;                              //SUBSCRIBE±¨ÎÄÖĞ£¬¹Ì¶¨±¨Í·³¤¶È=2
-	Variable_len = 2;                           //SUBSCRIBE±¨ÎÄÖĞ£¬¿É±ä±¨Í·³¤¶È=2	
-	Payload_len = 2 + strlen(topic_name) + 1;   //¼ÆËãÓĞĞ§¸ººÉ³¤¶È = 2×Ö½Ú(topic_name³¤¶È)+ topic_name×Ö·û´®µÄ³¤¶È + 1×Ö½Ú·şÎñµÈ¼¶
+	Fixed_len = 2;                              //SUBSCRIBEæŠ¥æ–‡ä¸­ï¼Œå›ºå®šæŠ¥å¤´é•¿åº¦=2
+	Variable_len = 2;                           //SUBSCRIBEæŠ¥æ–‡ä¸­ï¼Œå¯å˜æŠ¥å¤´é•¿åº¦=2	
+	Payload_len = 2 + strlen(topic_name) + 1;   //è®¡ç®—æœ‰æ•ˆè´Ÿè·é•¿åº¦ = 2å­—èŠ‚(topic_nameé•¿åº¦)+ topic_nameå­—ç¬¦ä¸²çš„é•¿åº¦ + 1å­—èŠ‚æœåŠ¡ç­‰çº§
 	memset(SendSubscribe_buf,0,512);
-	SendSubscribe_buf[0]=0x82;                                    //µÚ1¸ö×Ö½Ú £º¹Ì¶¨0x82                      
-	SendSubscribe_buf[1]=Variable_len + Payload_len;              //µÚ2¸ö×Ö½Ú £º¿É±ä±¨Í·+ÓĞĞ§¸ººÉµÄ³¤¶È	
-	SendSubscribe_buf[2]=0x00;                                    //µÚ3¸ö×Ö½Ú £º±¨ÎÄ±êÊ¶·û¸ß×Ö½Ú£¬¹Ì¶¨Ê¹ÓÃ0x00
-	SendSubscribe_buf[3]=0x01;		                              //µÚ4¸ö×Ö½Ú £º±¨ÎÄ±êÊ¶·ûµÍ×Ö½Ú£¬¹Ì¶¨Ê¹ÓÃ0x01
-	SendSubscribe_buf[4]=strlen(topic_name)/256;                  //µÚ5¸ö×Ö½Ú £ºtopic_name³¤¶È¸ß×Ö½Ú
-	SendSubscribe_buf[5]=strlen(topic_name)%256;		          //µÚ6¸ö×Ö½Ú £ºtopic_name³¤¶ÈµÍ×Ö½Ú
-	memcpy(&SendSubscribe_buf[6],topic_name,strlen(topic_name));  //µÚ7¸ö×Ö½Ú¿ªÊ¼ £º¸´ÖÆ¹ıÀ´topic_name×Ö´®		
-	SendSubscribe_buf[6+strlen(topic_name)]=QoS;                  //×îºó1¸ö×Ö½Ú£º¶©ÔÄµÈ¼¶
+	SendSubscribe_buf[0]=0x82;                                    //ç¬¬1ä¸ªå­—èŠ‚ ï¼šå›ºå®š0x82                      
+	SendSubscribe_buf[1]=Variable_len + Payload_len;              //ç¬¬2ä¸ªå­—èŠ‚ ï¼šå¯å˜æŠ¥å¤´+æœ‰æ•ˆè´Ÿè·çš„é•¿åº¦	
+	SendSubscribe_buf[2]=0x00;                                    //ç¬¬3ä¸ªå­—èŠ‚ ï¼šæŠ¥æ–‡æ ‡è¯†ç¬¦é«˜å­—èŠ‚ï¼Œå›ºå®šä½¿ç”¨0x00
+	SendSubscribe_buf[3]=0x01;		                              //ç¬¬4ä¸ªå­—èŠ‚ ï¼šæŠ¥æ–‡æ ‡è¯†ç¬¦ä½å­—èŠ‚ï¼Œå›ºå®šä½¿ç”¨0x01
+	SendSubscribe_buf[4]=strlen(topic_name)/256;                  //ç¬¬5ä¸ªå­—èŠ‚ ï¼štopic_nameé•¿åº¦é«˜å­—èŠ‚
+	SendSubscribe_buf[5]=strlen(topic_name)%256;		          //ç¬¬6ä¸ªå­—èŠ‚ ï¼štopic_nameé•¿åº¦ä½å­—èŠ‚
+	memcpy(&SendSubscribe_buf[6],topic_name,strlen(topic_name));  //ç¬¬7ä¸ªå­—èŠ‚å¼€å§‹ ï¼šå¤åˆ¶è¿‡æ¥topic_nameå­—ä¸²		
+	SendSubscribe_buf[6+strlen(topic_name)]=QoS;                  //æœ€å1ä¸ªå­—èŠ‚ï¼šè®¢é˜…ç­‰çº§
 	ESP8266_SendBuf(SendSubscribe_buf,Fixed_len + Variable_len + Payload_len);
 }
 
 /************************
-º¯ÊıÃû³Æ£ºMQTT_PublishQs0
-º¯Êı×÷ÓÃ£ºµÈ¼¶0 ·¢²¼ÏûÏ¢±¨ÎÄ
-º¯ÊıÈë¿Ú£º
-		topic			topicÃû³Æ
-		data			Êı¾İ
-		data_len	Êı¾İ³¤¶È
-º¯Êı³ö¿Ú£ºÎŞ
-º¯Êı×÷Õß£º
-´´½¨Ê±¼ä£º2021.01.16
-ĞŞ¸ÄÊ±¼ä£º2021.01.16
+å‡½æ•°åç§°ï¼šMQTT_PublishQs0
+å‡½æ•°ä½œç”¨ï¼šç­‰çº§0 å‘å¸ƒæ¶ˆæ¯æŠ¥æ–‡
+å‡½æ•°å…¥å£ï¼š
+		topic			topicåç§°
+		data			æ•°æ®
+		data_len	æ•°æ®é•¿åº¦
+å‡½æ•°å‡ºå£ï¼šæ— 
+å‡½æ•°ä½œè€…ï¼š
+åˆ›å»ºæ—¶é—´ï¼š2021.01.16
+ä¿®æ”¹æ—¶é—´ï¼š2021.01.16
 ************************/
 void MQTT_PublishQs0(char *topic, char *data, int data_len)
 {	
 	uint8_t Send_buf[512] = "\0"; 
-	Fixed_len = 2;                             //¹Ì¶¨±¨Í·³¤¶È£º2×Ö½Ú
-	Variable_len = 2 + strlen(topic);          //¿É±ä±¨Í·³¤¶È£º2×Ö½Ú(topic³¤¶È)+ topic×Ö·û´®µÄ³¤¶È
-	Payload_len = data_len;                    //ÓĞĞ§¸ººÉ³¤¶È£º¾ÍÊÇdata_len
+	Fixed_len = 2;                             //å›ºå®šæŠ¥å¤´é•¿åº¦ï¼š2å­—èŠ‚
+	Variable_len = 2 + strlen(topic);          //å¯å˜æŠ¥å¤´é•¿åº¦ï¼š2å­—èŠ‚(topicé•¿åº¦)+ topicå­—ç¬¦ä¸²çš„é•¿åº¦
+	Payload_len = data_len;                    //æœ‰æ•ˆè´Ÿè·é•¿åº¦ï¼šå°±æ˜¯data_len
 	memset(Send_buf,0,512);
-	Send_buf[0]=0x30;                         //µÚ1¸ö×Ö½Ú £º¹Ì¶¨0xC0                
-	Send_buf[1]=Variable_len + Payload_len;   //µÚ2¸ö×Ö½Ú £º¿É±ä±¨Í·+ÓĞĞ§¸ººÉµÄ³¤¶È	
+	Send_buf[0]=0x30;                         //ç¬¬1ä¸ªå­—èŠ‚ ï¼šå›ºå®š0xC0                
+	Send_buf[1]=Variable_len + Payload_len;   //ç¬¬2ä¸ªå­—èŠ‚ ï¼šå¯å˜æŠ¥å¤´+æœ‰æ•ˆè´Ÿè·çš„é•¿åº¦	
 	if(Variable_len + Payload_len>=128)
 	{
 		Fixed_len = 3;
 		Send_buf[2]=0x01;
-		Send_buf[3]=strlen(topic)/256;            //µÚ3¸ö×Ö½Ú £ºtopic³¤¶È¸ß×Ö½Ú
-		Send_buf[4]=strlen(topic)%256;		       //µÚ4¸ö×Ö½Ú £ºtopic³¤¶ÈµÍ×Ö½Ú
-		memcpy(&Send_buf[5],topic,strlen(topic)); //µÚ5¸ö×Ö½Ú¿ªÊ¼ £º¿½±´topic×Ö·û´®
+		Send_buf[3]=strlen(topic)/256;            //ç¬¬3ä¸ªå­—èŠ‚ ï¼štopicé•¿åº¦é«˜å­—èŠ‚
+		Send_buf[4]=strlen(topic)%256;		       //ç¬¬4ä¸ªå­—èŠ‚ ï¼štopicé•¿åº¦ä½å­—èŠ‚
+		memcpy(&Send_buf[5],topic,strlen(topic)); //ç¬¬5ä¸ªå­—èŠ‚å¼€å§‹ ï¼šæ‹·è´topicå­—ç¬¦ä¸²
 		
-		memcpy(&Send_buf[5+strlen(topic)],data,data_len);   //¿½±´dataÊı¾İ
+		memcpy(&Send_buf[5+strlen(topic)],data,data_len);   //æ‹·è´dataæ•°æ®
 	}
 	else
 	{
-		Send_buf[2]=strlen(topic)/256;            //µÚ3¸ö×Ö½Ú £ºtopic³¤¶È¸ß×Ö½Ú
-		Send_buf[3]=strlen(topic)%256;		       //µÚ4¸ö×Ö½Ú £ºtopic³¤¶ÈµÍ×Ö½Ú
-		memcpy(&Send_buf[4],topic,strlen(topic)); //µÚ5¸ö×Ö½Ú¿ªÊ¼ £º¿½±´topic×Ö·û´®	
+		Send_buf[2]=strlen(topic)/256;            //ç¬¬3ä¸ªå­—èŠ‚ ï¼štopicé•¿åº¦é«˜å­—èŠ‚
+		Send_buf[3]=strlen(topic)%256;		       //ç¬¬4ä¸ªå­—èŠ‚ ï¼štopicé•¿åº¦ä½å­—èŠ‚
+		memcpy(&Send_buf[4],topic,strlen(topic)); //ç¬¬5ä¸ªå­—èŠ‚å¼€å§‹ ï¼šæ‹·è´topicå­—ç¬¦ä¸²	
 		
-		memcpy(&Send_buf[4+strlen(topic)],data,data_len);   //¿½±´dataÊı¾İ
+		memcpy(&Send_buf[4+strlen(topic)],data,data_len);   //æ‹·è´dataæ•°æ®
 	}
-	ESP8266_SendBuf(Send_buf, Fixed_len + Variable_len + Payload_len);  //¼ÓÈë·¢ËÍÊı¾İ»º³åÇø
+	ESP8266_SendBuf(Send_buf, Fixed_len + Variable_len + Payload_len);  //åŠ å…¥å‘é€æ•°æ®ç¼“å†²åŒº
 }
 	
 
 /************************
-º¯ÊıÃû³Æ£ºMQTT_Send2BemfaData
-º¯Êı×÷ÓÃ£ºÏò°Í·¨ÔÆ·¢ËÍÊı¾İ
-º¯ÊıÈë¿Ú£º
-	topic	·¢ËÍµÄ±¨ÎÄ
-	data 	·¢ËÍÊı¾İ
-º¯Êı³ö¿Ú£ºÎŞ
-º¯Êı×÷Õß£º
-´´½¨Ê±¼ä£º2024.03.21
-ĞŞ¸ÄÊ±¼ä£º2024.03.21
+å‡½æ•°åç§°ï¼šMQTT_Send2BemfaData
+å‡½æ•°ä½œç”¨ï¼šå‘å·´æ³•äº‘å‘é€æ•°æ®
+å‡½æ•°å…¥å£ï¼š
+	topic	å‘é€çš„æŠ¥æ–‡
+	data 	å‘é€æ•°æ®
+å‡½æ•°å‡ºå£ï¼šæ— 
+å‡½æ•°ä½œè€…ï¼š
+åˆ›å»ºæ—¶é—´ï¼š2024.03.21
+ä¿®æ”¹æ—¶é—´ï¼š2024.03.21
 ************************/
 void MQTT_Send2BemfaData(char *topic,char *data)
 {
@@ -283,16 +283,16 @@ uint8_t *DealPushdata_Qs0(void)
 }
 
 /**
-  * @brief  ÔÆÆ½Ì¨LEDºÍ·äÃùÆ÷¿ØÖÆ´¦Àí
-  * @param  ÎŞ
-  * @note   ¹¦ÄÜÁ÷³Ì£º
-  *         1. ´ÓWiFi½ÓÊÕ»º³åÇø½âÎöÔÆÆ½Ì¨¿ØÖÆÖ¸Áî
-  *         2. Ê¶±ğ°üº¬LED¿ØÖÆÖ÷Ìâ(SubscribeLED0_TOPIC)µÄÖ¸Áî
-  *         3. Ö´ĞĞÖ¸Áî£º
-  *            - "on": ¿ªÆôËùÓĞLEDºÍ·äÃùÆ÷
-  *            - "off": ¹Ø±ÕËùÓĞLEDºÍ·äÃùÆ÷
-  *         4. ÇåÀíWiFi½ÓÊÕ»º³åÇø
-  * @retval ÎŞ
+  * @brief  äº‘å¹³å°LEDå’Œèœ‚é¸£å™¨æ§åˆ¶å¤„ç†
+  * @param  æ— 
+  * @note   åŠŸèƒ½æµç¨‹ï¼š
+  *         1. ä»WiFiæ¥æ”¶ç¼“å†²åŒºè§£æäº‘å¹³å°æ§åˆ¶æŒ‡ä»¤
+  *         2. è¯†åˆ«åŒ…å«LEDæ§åˆ¶ä¸»é¢˜(SubscribeLED0_TOPIC)çš„æŒ‡ä»¤
+  *         3. æ‰§è¡ŒæŒ‡ä»¤ï¼š
+  *            - "on": å¼€å¯æ‰€æœ‰LEDå’Œèœ‚é¸£å™¨
+  *            - "off": å…³é—­æ‰€æœ‰LEDå’Œèœ‚é¸£å™¨
+  *         4. æ¸…ç†WiFiæ¥æ”¶ç¼“å†²åŒº
+  * @retval æ— 
   */
 void Cloud_Ctrl_LEDBEEP(void)
 {
@@ -323,27 +323,27 @@ void Cloud_Ctrl_LEDBEEP(void)
 	}
 }
 
-/**************************** ·â×°ÔÆÆ½Ì¨¿ØÖÆµÆ·äÃùÆ÷ºÍµç»ú ****************************/
+/**************************** å°è£…äº‘å¹³å°æ§åˆ¶ç¯èœ‚é¸£å™¨å’Œç”µæœº ****************************/
 /**
-  * @brief  ÔÆÆ½Ì¨×ÛºÏÉè±¸¿ØÖÆÆ÷
-  * @param  ÎŞ
-  * @note   ¼¯³É¿ØÖÆÆ÷£¬°üº¬£º
-  *         1. Éè±¸¿ØÖÆ¹¦ÄÜ£º
-  *            - LED/·äÃùÆ÷¿ØÖÆ£¨Í¨¹ıSubscribeLED0_TOPICÖ¸Áî£©
-  *            - µç»ú¿ØÖÆ£¨Í¨¹ıSubscribeMOTOR_TOPICÖ¸Áî£©
-  *         2. ´«¸ĞÆ÷Êı¾İÉÏ±¨£º
-  *            - DHT11ÎÂÊª¶ÈÊı¾İ£¨5Ãë¼ä¸ô£©
-  *            - MQ2ÑÌÎí´«¸ĞÆ÷Êı¾İ£¨5Ãë¼ä¸ô£©
-  *         3. µç»úÖÇÄÜ¹ÜÀí£º
-  *            - ×´Ì¬»ú¿ØÖÆ£¨¿ÕÏĞ/Õı×ª/·´×ª£©
-  *            - 2Ãë×Ô¶¯Í£Ö¹±£»¤
-  *            - ×´Ì¬Ö¸Ê¾µÆ¹ÜÀí£¨LED3/LED4£©
-  *         4. ´®¿ÚÊı¾İ´¦Àí£º
-  *            - ½âÎö0xAA55Ğ­ÒéµÄ´®¿ÚÖ¸Áî
-  *         ÌØÊâÔ¼Êø£º
-  *            - ½öµ±´¦ÓÚÔÆÆ½Ì¨²Ëµ¥(MENU_CLOUD)Ê±·¢ËÍ´«¸ĞÆ÷Êı¾İ
-  *            - µç»ú½ö¿ÕÏĞ×´Ì¬½ÓÊÜĞÂ¿ØÖÆÖ¸Áî
-  * @retval ÎŞ
+  * @brief  äº‘å¹³å°ç»¼åˆè®¾å¤‡æ§åˆ¶å™¨
+  * @param  æ— 
+  * @note   é›†æˆæ§åˆ¶å™¨ï¼ŒåŒ…å«ï¼š
+  *         1. è®¾å¤‡æ§åˆ¶åŠŸèƒ½ï¼š
+  *            - LED/èœ‚é¸£å™¨æ§åˆ¶ï¼ˆé€šè¿‡SubscribeLED0_TOPICæŒ‡ä»¤ï¼‰
+  *            - ç”µæœºæ§åˆ¶ï¼ˆé€šè¿‡SubscribeMOTOR_TOPICæŒ‡ä»¤ï¼‰
+  *         2. ä¼ æ„Ÿå™¨æ•°æ®ä¸ŠæŠ¥ï¼š
+  *            - DHT11æ¸©æ¹¿åº¦æ•°æ®ï¼ˆ5ç§’é—´éš”ï¼‰
+  *            - MQ2çƒŸé›¾ä¼ æ„Ÿå™¨æ•°æ®ï¼ˆ5ç§’é—´éš”ï¼‰
+  *         3. ç”µæœºæ™ºèƒ½ç®¡ç†ï¼š
+  *            - çŠ¶æ€æœºæ§åˆ¶ï¼ˆç©ºé—²/æ­£è½¬/åè½¬ï¼‰
+  *            - 2ç§’è‡ªåŠ¨åœæ­¢ä¿æŠ¤
+  *            - çŠ¶æ€æŒ‡ç¤ºç¯ç®¡ç†ï¼ˆLED3/LED4ï¼‰
+  *         4. ä¸²å£æ•°æ®å¤„ç†ï¼š
+  *            - è§£æ0xAA55åè®®çš„ä¸²å£æŒ‡ä»¤
+  *         ç‰¹æ®Šçº¦æŸï¼š
+  *            - ä»…å½“å¤„äºäº‘å¹³å°èœå•(MENU_CLOUD)æ—¶å‘é€ä¼ æ„Ÿå™¨æ•°æ®
+  *            - ç”µæœºä»…ç©ºé—²çŠ¶æ€æ¥å—æ–°æ§åˆ¶æŒ‡ä»¤
+  * @retval æ— 
   */
 uint8_t Bemfa_Buf[50];
 void Cloud_Ctrl_LEDBEEP_DHT11_MOTOR(void)
@@ -351,12 +351,12 @@ void Cloud_Ctrl_LEDBEEP_DHT11_MOTOR(void)
     static uint32_t cloudMotorStartTime = 0;
 	static uint32_t lastDataSendTime = 0;
 	
-	/**************************** MQTT¿ØÖÆLEDºÍBEEPÒÔ¼°µç»ú ****************************/
+	/**************************** MQTTæ§åˆ¶LEDå’ŒBEEPä»¥åŠç”µæœº ****************************/
     uint8_t * GetCloudData = NULL;
     GetCloudData = DealPushdata_Qs0();
     if(GetCloudData)
     {
-        /**************************** LEDºÍ·äÃùÆ÷¿ØÖÆ²¿·Ö ****************************/
+        /**************************** LEDå’Œèœ‚é¸£å™¨æ§åˆ¶éƒ¨åˆ† ****************************/
         if(strstr((char*)GetCloudData, SubscribeLED0_TOPIC))
         {
             if(strstr((char*)GetCloudData, "on"))
@@ -377,54 +377,54 @@ void Cloud_Ctrl_LEDBEEP_DHT11_MOTOR(void)
             }
         }
         
-       /**************************** µç»ú¿ØÖÆ²¿·Ö ****************************/
+       /**************************** ç”µæœºæ§åˆ¶éƒ¨åˆ† ****************************/
         if(strstr((char*)GetCloudData, SubscribeMOTOR_TOPIC))
         {
-            /* Ö»ÓĞÔÚ¿ÕÏĞ×´Ì¬ÏÂ²Å½ÓÊÜÔÆÆ½Ì¨¿ØÖÆ */
+            /* åªæœ‰åœ¨ç©ºé—²çŠ¶æ€ä¸‹æ‰æ¥å—äº‘å¹³å°æ§åˆ¶ */
             if(motorState == MOTOR_STATE_IDLE) 
             {
-                if(strstr((char*)GetCloudData, "1")) // µç»úÕı×ª
+                if(strstr((char*)GetCloudData, "1")) // ç”µæœºæ­£è½¬
                 {
-                    Motor_SetSpeed(40, 1); // 40%Õ¼¿Õ±ÈÕı×ª
-                    LED3_Ctrl(LED_Open);   // LED3ÁÁ±íÊ¾Õı×ª
-                    LED4_Ctrl(LED_Close);  // ¹Ø±Õ·´×ªÖ¸Ê¾µÆ
+                    Motor_SetSpeed(40, 1); // 40%å ç©ºæ¯”æ­£è½¬
+                    LED3_Ctrl(LED_Open);   // LED3äº®è¡¨ç¤ºæ­£è½¬
+                    LED4_Ctrl(LED_Close);  // å…³é—­åè½¬æŒ‡ç¤ºç¯
                     
-                    /* ÉèÖÃÔÆÆ½Ì¨¿ØÖÆ×´Ì¬ºÍ¿ªÊ¼Ê±¼ä */
+                    /* è®¾ç½®äº‘å¹³å°æ§åˆ¶çŠ¶æ€å’Œå¼€å§‹æ—¶é—´ */
                     motorState = MOTOR_STATE_CLOUD_FORWARD;
-                    cloudMotorStartTime = Delay_GetTickCount(); // ¼ÇÂ¼¿ªÊ¼Ê±¼ä
+                    cloudMotorStartTime = Delay_GetTickCount(); // è®°å½•å¼€å§‹æ—¶é—´
                 }
-                else if(strstr((char*)GetCloudData, "0")) // µç»ú·´×ª
+                else if(strstr((char*)GetCloudData, "0")) // ç”µæœºåè½¬
                 {
-                    Motor_SetSpeed(40, 0); // 40%Õ¼¿Õ±È·´×ª
-                    LED4_Ctrl(LED_Open);   // LED4ÁÁ±íÊ¾·´×ª
-                    LED3_Ctrl(LED_Close);  // ¹Ø±ÕÕı×ªÖ¸Ê¾µÆ
+                    Motor_SetSpeed(40, 0); // 40%å ç©ºæ¯”åè½¬
+                    LED4_Ctrl(LED_Open);   // LED4äº®è¡¨ç¤ºåè½¬
+                    LED3_Ctrl(LED_Close);  // å…³é—­æ­£è½¬æŒ‡ç¤ºç¯
                     
-                    /* ÉèÖÃÔÆÆ½Ì¨¿ØÖÆ×´Ì¬ºÍ¿ªÊ¼Ê±¼ä */
+                    /* è®¾ç½®äº‘å¹³å°æ§åˆ¶çŠ¶æ€å’Œå¼€å§‹æ—¶é—´ */
                     motorState = MOTOR_STATE_CLOUD_BACKWARD;
-                    cloudMotorStartTime = Delay_GetTickCount(); // ¼ÇÂ¼¿ªÊ¼Ê±¼ä
+                    cloudMotorStartTime = Delay_GetTickCount(); // è®°å½•å¼€å§‹æ—¶é—´
                 }
             }
         }
 		
-		/***************************** ´¦ÀíÔÆÆ½Ì¨¿ØÖÆµÄµç»ú×´Ì¬ *****************************/
+		/***************************** å¤„ç†äº‘å¹³å°æ§åˆ¶çš„ç”µæœºçŠ¶æ€ *****************************/
 		if(motorState == MOTOR_STATE_CLOUD_FORWARD ||  motorState == MOTOR_STATE_CLOUD_BACKWARD)
 		{
 			uint32_t currentTime = Delay_GetTickCount();
 			uint32_t elapsedTime = currentTime - cloudMotorStartTime;
 			
-			/* Èç¹ûÔËĞĞÊ±¼ä³¬¹ı2000ºÁÃë(2Ãë) */
+			/* å¦‚æœè¿è¡Œæ—¶é—´è¶…è¿‡2000æ¯«ç§’(2ç§’) */
 			if(elapsedTime >= 2000)
 			{
-				Motor_Stop();   // Í£Ö¹µç»ú
+				Motor_Stop();   // åœæ­¢ç”µæœº
 				LED3_Ctrl(LED_Close);
 				LED4_Ctrl(LED_Close);
 				
-				/* ·µ»Øµ½¿ÕÏĞ×´Ì¬ */
+				/* è¿”å›åˆ°ç©ºé—²çŠ¶æ€ */
 				motorState = MOTOR_STATE_IDLE;
 			}
 		}
 		
-		/**************************** ¿ª¹ØÃÅ¿ØÖÆ²¿·Ö ****************************/
+		/**************************** å¼€å…³é—¨æ§åˆ¶éƒ¨åˆ† ****************************/
 		if(strstr((char*)GetCloudData, SubscribeDOOR_TOPIC))
         {
             if(strstr((char*)GetCloudData, "on"))
@@ -440,33 +440,33 @@ void Cloud_Ctrl_LEDBEEP_DHT11_MOTOR(void)
 		Clear_ESP8266Buf();
     }
 
-	/***************************** DHT11ÎÂÊª¶È²É¼¯Óë·¢ËÍ£¨Ã¿5Ãë·¢ËÍÒ»´Î£©*****************************/
+	/***************************** DHT11æ¸©æ¹¿åº¦é‡‡é›†ä¸å‘é€ï¼ˆæ¯5ç§’å‘é€ä¸€æ¬¡ï¼‰*****************************/
     if(Delay_GetTickCount() - lastDataSendTime > 5000) 
     {
         lastDataSendTime = Delay_GetTickCount();
         
-        /* ½öµ±MENUÔÚÔÆÆ½Ì¨²Ëµ¥Ê±²Å·¢ËÍÊı¾İ */
+        /* ä»…å½“MENUåœ¨äº‘å¹³å°èœå•æ—¶æ‰å‘é€æ•°æ® */
         if(currentMenu == MENU_CLOUD) 
         {
-			/****************************** ·¢ËÍÎÂÊª¶ÈÊı¾İ ******************************/
+			/****************************** å‘é€æ¸©æ¹¿åº¦æ•°æ® ******************************/
             char bemfaBuf[50];
             sprintf(bemfaBuf, "#%.1f#%d#", DHT11_Data.tem, DHT11_Data.hum);
             MQTT_Send2BemfaData(SubscribeTEMHUM_TOPIC, bemfaBuf);
 			
-			/****************************** ·¢ËÍÑÌÎíÊı¾İ ******************************/
-			/* ¶ÁÈ¡ÑÌÎí´«¸ĞÆ÷Êı¾İ */
-            uint16_t gasADC = MQ2_GetData();         			  // Ô­Ê¼ADCÖµ
-            float gasPPM = MQ2_GetData_PPM();       	 		  // PPMÖµ
+			/****************************** å‘é€çƒŸé›¾æ•°æ® ******************************/
+			/* è¯»å–çƒŸé›¾ä¼ æ„Ÿå™¨æ•°æ® */
+            uint16_t gasADC = MQ2_GetData();         			  // åŸå§‹ADCå€¼
+            float gasPPM = MQ2_GetData_PPM();       	 		  // PPMå€¼
 			char Gas_bemfaBuf[50];
 			sprintf(Gas_bemfaBuf, "#%d#%.2f#", gasADC, gasPPM);
-            MQTT_Send2BemfaData(SubscribeGAS_TOPIC, Gas_bemfaBuf);// ·¢ËÍµ½ÔÆÆ½Ì¨
+            MQTT_Send2BemfaData(SubscribeGAS_TOPIC, Gas_bemfaBuf);// å‘é€åˆ°äº‘å¹³å°
         }
     }
 
-    /* ´®¿ÚÊı¾İ´¦Àí£¨±£ÁôÔ­ÓĞ¹¦ÄÜ£© */
+    /* ä¸²å£æ•°æ®å¤„ç†ï¼ˆä¿ç•™åŸæœ‰åŠŸèƒ½ï¼‰ */
     if(USART1_Data.flag == 1)
     {
-        printf("USART1½ÓÊÕµ½Êı¾İ£º\r\n");
+        printf("USART1æ¥æ”¶åˆ°æ•°æ®ï¼š\r\n");
         for(uint16_t i = 0; i < USART1_Data.count; i++)
 		printf("%x ", USART1_Data.RxBuf[i]);
 		printf("\r\n");
