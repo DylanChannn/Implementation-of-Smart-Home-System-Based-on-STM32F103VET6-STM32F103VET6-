@@ -1,15 +1,15 @@
 /****************************************************************************************************
  * @file        menu.c
- * @author      DylanChan(xiangyuzhan@foxmail.com)
+ * @author      DylanChan
  * @version     V1.0
  * @date        2025-06-23
- * @brief       ÖÇÄÜ¼Ò¾Ó¿ØÖÆÏµÍ³µÄ²Ëµ¥Ä£¿é£ºÊµÏÖ¶à¼¶²Ëµ¥µÄÏÔÊ¾Óë°´¼ü½»»¥
- * @details     ±¾ÎÄ¼ş°üº¬¶à¼¶²Ëµ¥µÄ×´Ì¬¹ÜÀí¡¢½çÃæ»æÖÆºÍ°´¼ü´¦Àí¹¦ÄÜ£º
- *              - Ö§³ÖÖ÷²Ëµ¥¡¢±¾µØ¿ØÖÆ¡¢Ë¢¿¨×´Ì¬¡¢µÆ¹â¿ØÖÆ¡¢´°Á±¿ØÖÆ¡¢»·¾³¼à²âºÍ°Í·¨ÔÆÆ½Ì¨¹²7¸ö½çÃæ
- *              - Í¨¹ıÈ«¾Ö×´Ì¬»ú¹ÜÀíµ±Ç°²Ëµ¥½çÃæ
- *              - Ìá¹©²Ëµ¥³õÊ¼»¯¡¢Ë¢ĞÂ¡¢¸üĞÂ¹¦ÄÜ
- *              - °´¼üÏìÓ¦Âß¼­¸ù¾İµ±Ç°²Ëµ¥×´Ì¬¶¯Ì¬µ÷Õû
- * @note        ÒÀÀµÓÚST7789½øĞĞLCDÏÔÊ¾¡¢ÍâÉèÇı¶¯£¨LED/µç»ú/´«¸ĞÆ÷µÈ£©ºÍ°´¼üÉ¨Ãè²¿·Ö
+ * @brief       æ™ºèƒ½å®¶å±…æ§åˆ¶ç³»ç»Ÿçš„èœå•æ¨¡å—ï¼šå®ç°å¤šçº§èœå•çš„æ˜¾ç¤ºä¸æŒ‰é”®äº¤äº’
+ * @details     æœ¬æ–‡ä»¶åŒ…å«å¤šçº§èœå•çš„çŠ¶æ€ç®¡ç†ã€ç•Œé¢ç»˜åˆ¶å’ŒæŒ‰é”®å¤„ç†åŠŸèƒ½ï¼š
+ *              - æ”¯æŒä¸»èœå•ã€æœ¬åœ°æ§åˆ¶ã€åˆ·å¡çŠ¶æ€ã€ç¯å…‰æ§åˆ¶ã€çª—å¸˜æ§åˆ¶ã€ç¯å¢ƒç›‘æµ‹å’Œå·´æ³•äº‘å¹³å°å…±7ä¸ªç•Œé¢
+ *              - é€šè¿‡å…¨å±€çŠ¶æ€æœºç®¡ç†å½“å‰èœå•ç•Œé¢
+ *              - æä¾›èœå•åˆå§‹åŒ–ã€åˆ·æ–°ã€æ›´æ–°åŠŸèƒ½
+ *              - æŒ‰é”®å“åº”é€»è¾‘æ ¹æ®å½“å‰èœå•çŠ¶æ€åŠ¨æ€è°ƒæ•´
+ * @note        ä¾èµ–äºST7789è¿›è¡ŒLCDæ˜¾ç¤ºã€å¤–è®¾é©±åŠ¨ï¼ˆLED/ç”µæœº/ä¼ æ„Ÿå™¨ç­‰ï¼‰å’ŒæŒ‰é”®æ‰«æéƒ¨åˆ†
  ****************************************************************************************************
  */
 #include "menu.h"
@@ -28,34 +28,34 @@
 #include "rc522.h"
 #include <string.h>
 
-/* È«¾Ö±äÁ¿¶¨Òå */
+/* å…¨å±€å˜é‡å®šä¹‰ */
 MenuState currentMenu = MENU_MAIN;
-static uint8_t currentSelection = 0;  	// µ±Ç°Ñ¡ÖĞµÄ²Ëµ¥Ïî
-static uint8_t led1State = 0;         	// LED1×´Ì¬£º0¹Ø1¿ª
-static uint8_t led2State = 0;         	// LED2×´Ì¬£º0¹Ø1¿ª
-static uint8_t curtainSelection = 0; 	// ´°Á±¿ØÖÆÑ¡Ïî
+static uint8_t currentSelection = 0;  	// å½“å‰é€‰ä¸­çš„èœå•é¡¹
+static uint8_t led1State = 0;         	// LED1çŠ¶æ€ï¼š0å…³1å¼€
+static uint8_t led2State = 0;         	// LED2çŠ¶æ€ï¼š0å…³1å¼€
+static uint8_t curtainSelection = 0; 	// çª—å¸˜æ§åˆ¶é€‰é¡¹
 
-/* ²Ëµ¥±êÌâºÍÄÚÈİ */
+/* èœå•æ ‡é¢˜å’Œå†…å®¹ */
 const char* menuTitles[] = {
-    "Ö÷²Ëµ¥",
-    "±¾µØ¿ØÖÆ",
-    "Ë¢¿¨×´Ì¬",
-    "µÆ¹â¿ØÖÆ",
-    "´°Á±¿ØÖÆ",
-    "»·¾³¼à²â",
-    "°Í·¨ÔÆÆ½Ì¨"
+    "ä¸»èœå•",
+    "æœ¬åœ°æ§åˆ¶",
+    "åˆ·å¡çŠ¶æ€",
+    "ç¯å…‰æ§åˆ¶",
+    "çª—å¸˜æ§åˆ¶",
+    "ç¯å¢ƒç›‘æµ‹",
+    "å·´æ³•äº‘å¹³å°"
 };
 
-/* ²Ëµ¥ÏîÄÚÈİ */
-const char* mainMenuItems[] = {"±¾µØ¿ØÖÆ", "°Í·¨ÔÆÆ½Ì¨¿ØÖÆ", NULL};
-const char* localMenuItems[] = {"Ë¢¿¨", "¿ªµÆ", "´°Á±", "ÎÂ/Êª¶È/»ğÔÖ/ÑÌÎí", NULL};
-const char* curtainMenuItems[] = {"¹Ø´°Á±", "¿ª´°Á±", "ÔİÍ£", NULL};
+/* èœå•é¡¹å†…å®¹ */
+const char* mainMenuItems[] = {"æœ¬åœ°æ§åˆ¶", "å·´æ³•äº‘å¹³å°æ§åˆ¶", NULL};
+const char* localMenuItems[] = {"åˆ·å¡", "å¼€ç¯", "çª—å¸˜", "æ¸©/æ¹¿åº¦/ç«ç¾/çƒŸé›¾", NULL};
+const char* curtainMenuItems[] = {"å…³çª—å¸˜", "å¼€çª—å¸˜", "æš‚åœ", NULL};
 
 /**
-  * @brief  ÏÔÊ¾´øÑ¡ÖĞ×´Ì¬µÄ²Ëµ¥Ïî
-  * @param  y: ´¹Ö±Î»ÖÃ£¨ÏñËØ£©
-  * @param  text: ÒªÏÔÊ¾µÄÎÄ±¾
-  * @param  selected: Ñ¡ÖĞ×´Ì¬±êÖ¾£¨1ÎªÑ¡ÖĞ£¬0ÎªÎ´Ñ¡ÖĞ£©
+  * @brief  æ˜¾ç¤ºå¸¦é€‰ä¸­çŠ¶æ€çš„èœå•é¡¹
+  * @param  y: å‚ç›´ä½ç½®ï¼ˆåƒç´ ï¼‰
+  * @param  text: è¦æ˜¾ç¤ºçš„æ–‡æœ¬
+  * @param  selected: é€‰ä¸­çŠ¶æ€æ ‡å¿—ï¼ˆ1ä¸ºé€‰ä¸­ï¼Œ0ä¸ºæœªé€‰ä¸­ï¼‰
   * @retval None
   */
 void ShowMenuItem(uint16_t y, const char* text, uint8_t selected) 
@@ -70,7 +70,7 @@ void ShowMenuItem(uint16_t y, const char* text, uint8_t selected)
 }
 
 /**
-  * @brief  ÏÔÊ¾Ö÷²Ëµ¥½çÃæ
+  * @brief  æ˜¾ç¤ºä¸»èœå•ç•Œé¢
   * @param  None
   * @retval None
   */
@@ -78,10 +78,10 @@ void DisplayMenuMain(void)
 {
     ST7789_Clear(BLACK);
     
-    /* ÏÔÊ¾±êÌâ */
+    /* æ˜¾ç¤ºæ ‡é¢˜ */
     ST7789_ShowString(20, 20, WHITE, BLACK, (char*)menuTitles[MENU_MAIN]);
     
-    /* ÏÔÊ¾²Ëµ¥Ïî */
+    /* æ˜¾ç¤ºèœå•é¡¹ */
     for(uint8_t i = 0; i < 2; i++) 
 	{
         ShowMenuItem(40 + i*20, mainMenuItems[i], (i == currentSelection));
@@ -89,7 +89,7 @@ void DisplayMenuMain(void)
 }
 
 /**
-  * @brief  ÏÔÊ¾±¾µØ¿ØÖÆ²Ëµ¥½çÃæ
+  * @brief  æ˜¾ç¤ºæœ¬åœ°æ§åˆ¶èœå•ç•Œé¢
   * @param  None
   * @retval None
   */
@@ -106,7 +106,7 @@ void DisplayMenuLocal(void)
 }
 
 /**
-  * @brief  ÏÔÊ¾Ë¢¿¨×´Ì¬½çÃæ
+  * @brief  æ˜¾ç¤ºåˆ·å¡çŠ¶æ€ç•Œé¢
   * @param  None
   * @retval None
   */
@@ -121,7 +121,7 @@ void DisplayMenuCardStatus(void)
     if(cardStatus == CARD_DETECTED) 
 	{
         char cardStr[30];
-        sprintf(cardStr, "¿¨ºÅ: %02X%02X%02X%02X", cardSerial[0], cardSerial[1], cardSerial[2], cardSerial[3]);
+        sprintf(cardStr, "å¡å·: %02X%02X%02X%02X", cardSerial[0], cardSerial[1], cardSerial[2], cardSerial[3]);
         ST7789_ShowString(20, 40, WHITE, BLACK, cardStr);
 		LED1_Ctrl(LED_Open);
 		LED2_Ctrl(LED_Open);
@@ -130,20 +130,20 @@ void DisplayMenuCardStatus(void)
     } 
 	else 
 	{
-        ST7789_ShowString(20, 40, WHITE, BLACK, "¿¨Î´ÕÒµ½");
+        ST7789_ShowString(20, 40, WHITE, BLACK, "å¡æœªæ‰¾åˆ°");
 		LED1_Ctrl(LED_Close);
 		LED2_Ctrl(LED_Close);
 		LED3_Ctrl(LED_Close);
 		LED4_Ctrl(LED_Close);
     }
     
-    ST7789_ShowString(20, 60, WHITE, BLACK, "KEY1: ¿ªÃÅ");
-    ST7789_ShowString(20, 80, WHITE, BLACK, "KEY2: ¹ØÃÅ");
-    ST7789_ShowString(20, 100, WHITE, BLACK, "KEY3: ·µ»Ø");
+    ST7789_ShowString(20, 60, WHITE, BLACK, "KEY1: å¼€é—¨");
+    ST7789_ShowString(20, 80, WHITE, BLACK, "KEY2: å…³é—¨");
+    ST7789_ShowString(20, 100, WHITE, BLACK, "KEY3: è¿”å›");
 }
 
 /**
-  * @brief  ÏÔÊ¾µÆ¹â¿ØÖÆ½çÃæ
+  * @brief  æ˜¾ç¤ºç¯å…‰æ§åˆ¶ç•Œé¢
   * @param  None
   * @retval None
   */
@@ -153,19 +153,19 @@ void DisplayMenuLight(void)
     ST7789_ShowString(20, 20, WHITE, BLACK, (char*)menuTitles[MENU_LIGHT]);
     
     char statusText[20];
-    snprintf(statusText, sizeof(statusText), "LED1: %s", led1State ? "¿ª" : "¹Ø");
+    snprintf(statusText, sizeof(statusText), "LED1: %s", led1State ? "å¼€" : "å…³");
     ST7789_ShowString(20, 40, RED, BLACK, statusText);
     
-    snprintf(statusText, sizeof(statusText), "LED2: %s", led2State ? "¿ª" : "¹Ø");
+    snprintf(statusText, sizeof(statusText), "LED2: %s", led2State ? "å¼€" : "å…³");
     ST7789_ShowString(20, 60, YELLOW, BLACK, statusText);
     
-    ST7789_ShowString(20, 80, RED, BLACK, "KEY1: LED1¿ª¹Ø");
-    ST7789_ShowString(20, 100, YELLOW, BLACK, "KEY2: LED2¿ª¹Ø");
-    ST7789_ShowString(20, 120, WHITE, BLACK, "KEY3: ·µ»Ø");
+    ST7789_ShowString(20, 80, RED, BLACK, "KEY1: LED1å¼€å…³");
+    ST7789_ShowString(20, 100, YELLOW, BLACK, "KEY2: LED2å¼€å…³");
+    ST7789_ShowString(20, 120, WHITE, BLACK, "KEY3: è¿”å›");
 }
 
 /**
-  * @brief  ÏÔÊ¾´°Á±¿ØÖÆ½çÃæ
+  * @brief  æ˜¾ç¤ºçª—å¸˜æ§åˆ¶ç•Œé¢
   * @param  None
   * @retval None
   */
@@ -179,50 +179,50 @@ void DisplayMenuCurtain(void)
 	{
         ShowMenuItem(40 + i*20, curtainMenuItems[i], (i == curtainSelection));
     }
-	ST7789_ShowString(20, 120, WHITE, BLACK, "KEY3: ·µ»Ø");
+	ST7789_ShowString(20, 120, WHITE, BLACK, "KEY3: è¿”å›");
 }
 
 /**
-  * @brief  ÏÔÊ¾»·¾³¼à²â½çÃæ£¨ÎÂÊª¶È/»ğÔÖ/ÑÌÎí£©
+  * @brief  æ˜¾ç¤ºç¯å¢ƒç›‘æµ‹ç•Œé¢ï¼ˆæ¸©æ¹¿åº¦/ç«ç¾/çƒŸé›¾ï¼‰
   * @param  None
   * @retval None
   */
-uint8_t fireStatus = 0;  // Ä¬ÈÏÎŞ»ğÔÖ
+uint8_t fireStatus = 0;  // é»˜è®¤æ— ç«ç¾
 void DisplayMenuTempHum(void) 
 {
     ST7789_Clear(BLACK);
     ST7789_ShowString(20, 20, WHITE, BLACK, (char*)menuTitles[MENU_TEMP_HUM]);
     
-	ST7789_ShowString(20, 20, WHITE, BLACK, "ÎÂ/Êª¶È/»ğÔÖ/ÑÌÎí");
+	ST7789_ShowString(20, 20, WHITE, BLACK, "æ¸©/æ¹¿åº¦/ç«ç¾/çƒŸé›¾");
 	
-	/* »ñÈ¡ÎÂÊª¶ÈÊı¾İ£¨Èç¹û»ñÈ¡Ê§°ÜÔòÊ¹ÓÃÉÏ´ÎµÄÖµ£© */
+	/* è·å–æ¸©æ¹¿åº¦æ•°æ®ï¼ˆå¦‚æœè·å–å¤±è´¥åˆ™ä½¿ç”¨ä¸Šæ¬¡çš„å€¼ï¼‰ */
 	DHT11_GetData(&DHT11_Data);
 	
-	/* µÚÈıĞĞ£º»ğÔÖ×´Ì¬ */
-    fireStatus = Fire_GetStatus();		/* »ñÈ¡»ğÔÖ×´Ì¬ */
+	/* ç¬¬ä¸‰è¡Œï¼šç«ç¾çŠ¶æ€ */
+    fireStatus = Fire_GetStatus();		/* è·å–ç«ç¾çŠ¶æ€ */
     if(fireStatus) 
 	{
-        ST7789_ShowString(20, 80, BLACK, RED, "ÓĞ»ğÔÖ£¡");
+        ST7789_ShowString(20, 80, BLACK, RED, "æœ‰ç«ç¾ï¼");
 		BEEP_Ctrl(BEEP_Open);
     } 
 	else 
 	{
-        ST7789_ShowString(20, 80, BLACK, GREEN, "ÎŞ»ğÔÖ");
+        ST7789_ShowString(20, 80, BLACK, GREEN, "æ— ç«ç¾");
 		BEEP_Ctrl(BEEP_Close);
     }
     
-	/* µÚËÄĞĞ£ºÑÌÎíPPMÖµ¶ÁÈ¡ */
-	float ppmValue = MQ2_GetData_PPM(); // »ñÈ¡PPMÖµ
-    uint8_t gasAlarm = (ppmValue > MQ2_PPM_ALARM_THRESHOLD) ? 1 : 0; // ÅĞ¶ÏÊÇ·ñ³¬±ê
+	/* ç¬¬å››è¡Œï¼šçƒŸé›¾PPMå€¼è¯»å– */
+	float ppmValue = MQ2_GetData_PPM(); // è·å–PPMå€¼
+    uint8_t gasAlarm = (ppmValue > MQ2_PPM_ALARM_THRESHOLD) ? 1 : 0; // åˆ¤æ–­æ˜¯å¦è¶…æ ‡
 	
-	/* ¸ñÊ½»¯ÏÔÊ¾ÄÚÈİ */
+	/* æ ¼å¼åŒ–æ˜¾ç¤ºå†…å®¹ */
 	char displayBuffer[32];
     snprintf(displayBuffer, sizeof(displayBuffer), "PPM: %.2f", ppmValue);
 	
     if(gasAlarm) 
 	{
         ST7789_ShowString(20, 100, RED, WHITE, displayBuffer);
-		ST7789_ShowString(92, 100, RED, WHITE, "Å¨¶È¹ı¸ß!");
+		ST7789_ShowString(92, 100, RED, WHITE, "æµ“åº¦è¿‡é«˜!");
 		LED1_Ctrl(LED_Open);
 		LED2_Ctrl(LED_Open); 
 		LED3_Ctrl(LED_Open); 
@@ -235,62 +235,62 @@ void DisplayMenuTempHum(void)
 		LED2_Ctrl(LED_Close); 
 		LED3_Ctrl(LED_Close); 
 		LED4_Ctrl(LED_Close); 
-		ST7789_ShowString(92, 100, LIGHTBLUE, WHITE, "Å¨¶ÈÕı³£");
+		ST7789_ShowString(92, 100, LIGHTBLUE, WHITE, "æµ“åº¦æ­£å¸¸");
     }
 	
-    ST7789_ShowString(20, 120, WHITE, BLACK, "KEY3: ·µ»Ø");
+    ST7789_ShowString(20, 120, WHITE, BLACK, "KEY3: è¿”å›");
 }
 
-/********************************************************** °Í·¨ÔÆÆ½Ì¨ÏÔÊ¾ **********************************************************/
+/********************************************************** å·´æ³•äº‘å¹³å°æ˜¾ç¤º **********************************************************/
 /**
-  * @brief  °Í·¨ÔÆÆ½Ì¨½çÃæÏÔÊ¾º¯Êı
+  * @brief  å·´æ³•äº‘å¹³å°ç•Œé¢æ˜¾ç¤ºå‡½æ•°
   * @param  None
   * @retval None
-  * @note   ±¾º¯ÊıÊµÏÖ°Í·¨ÔÆÆ½Ì¨½çÃæµÄÏÔÊ¾¹¦ÄÜ£º
-  *         1. Èç¹ûÊÇÊ×´Î½øÈë£¬³õÊ¼»¯ÔÆÆ½Ì¨Á¬½Ó
-  *         2. ÏÔÊ¾Á¬½Ó×´Ì¬ÌáÊ¾
-  *         3. »ñÈ¡²¢ÏÔÊ¾×îĞÂ»·¾³Êı¾İ£¨ÎÂÊª¶È¡¢ÑÌÎíÅ¨¶È£©
-  *         4. ¸ù¾İÑÌÎíÅ¨¶ÈÖµ½øĞĞ×´Ì¬ÌáÊ¾ºÍÑÕÉ«±ê¼Ç
-  *         5. ÏÔÊ¾ÓÃ»§²Ù×÷ÌáÊ¾£¨KEY3·µ»Ø£©
+  * @note   æœ¬å‡½æ•°å®ç°å·´æ³•äº‘å¹³å°ç•Œé¢çš„æ˜¾ç¤ºåŠŸèƒ½ï¼š
+  *         1. å¦‚æœæ˜¯é¦–æ¬¡è¿›å…¥ï¼Œåˆå§‹åŒ–äº‘å¹³å°è¿æ¥
+  *         2. æ˜¾ç¤ºè¿æ¥çŠ¶æ€æç¤º
+  *         3. è·å–å¹¶æ˜¾ç¤ºæœ€æ–°ç¯å¢ƒæ•°æ®ï¼ˆæ¸©æ¹¿åº¦ã€çƒŸé›¾æµ“åº¦ï¼‰
+  *         4. æ ¹æ®çƒŸé›¾æµ“åº¦å€¼è¿›è¡ŒçŠ¶æ€æç¤ºå’Œé¢œè‰²æ ‡è®°
+  *         5. æ˜¾ç¤ºç”¨æˆ·æ“ä½œæç¤ºï¼ˆKEY3è¿”å›ï¼‰
   */
-uint8_t bemfaConfigured = 0;           // ³õÊ¼Î´ÅäÖÃ
-uint32_t lastCloudTick = 0;            // ÉÏ´ÎÔÆÆ½Ì¨Êı¾İ¸üĞÂÊ±¼ä
-_CloudIOT_Connect BemfaData;           // °Í·¨ÔÆ½á¹¹
+uint8_t bemfaConfigured = 0;           // åˆå§‹æœªé…ç½®
+uint32_t lastCloudTick = 0;            // ä¸Šæ¬¡äº‘å¹³å°æ•°æ®æ›´æ–°æ—¶é—´
+_CloudIOT_Connect BemfaData;           // å·´æ³•äº‘ç»“æ„
 
 void DisplayMenuCloud(void)
 {
     ST7789_Clear(BLACK);
     ST7789_ShowString(20, 20, WHITE, BLACK, (char*)menuTitles[MENU_CLOUD]);
 	
-	/* Ê×´Î½øÈëÊ±ÅäÖÃÔÆÆ½Ì¨ */
+	/* é¦–æ¬¡è¿›å…¥æ—¶é…ç½®äº‘å¹³å° */
     if(!bemfaConfigured) 
 	{
-        ST7789_ShowString(30, 40, WHITE, BLACK, "Á¬½Ó°Í·¨ÔÆÆ½Ì¨ing");
+        ST7789_ShowString(30, 40, WHITE, BLACK, "è¿æ¥å·´æ³•äº‘å¹³å°ing");
         Bemfa_Config();
         bemfaConfigured = 1;
     }
-	/********************************** ÒÔÏÂÊÇÎÂÊª¶È²¿·ÖÏÔÊ¾ **********************************/
-	/* Ë¢ĞÂÎÂÊª¶ÈÊı¾İ */
+	/********************************** ä»¥ä¸‹æ˜¯æ¸©æ¹¿åº¦éƒ¨åˆ†æ˜¾ç¤º **********************************/
+	/* åˆ·æ–°æ¸©æ¹¿åº¦æ•°æ® */
     DHT11_RefreshData();
     
-    /* ÏÔÊ¾ÎÂÊª¶È */
+    /* æ˜¾ç¤ºæ¸©æ¹¿åº¦ */
     DHT11_GetData(&DHT11_Data);
     
-    /* ÏÔÊ¾Á¬½Ó×´Ì¬ */
-    ST7789_ShowString(20, 110, WHITE, BLACK, "KEY3: ·µ»Ø");
+    /* æ˜¾ç¤ºè¿æ¥çŠ¶æ€ */
+    ST7789_ShowString(20, 110, WHITE, BLACK, "KEY3: è¿”å›");
 	
-	/********************************** ÒÔÏÂÊÇÑÌÎí²¿·ÖÏÔÊ¾ **********************************/
-	/* Ë¢ĞÂÑÌÎí´«¸ĞÆ÷Êı¾İ */
-    float ppm = MQ2_GetData_PPM();  // »ñÈ¡ÑÌÎíPPMÖµ
+	/********************************** ä»¥ä¸‹æ˜¯çƒŸé›¾éƒ¨åˆ†æ˜¾ç¤º **********************************/
+	/* åˆ·æ–°çƒŸé›¾ä¼ æ„Ÿå™¨æ•°æ® */
+    float ppm = MQ2_GetData_PPM();  // è·å–çƒŸé›¾PPMå€¼
     char gasBuf[40];
 	
-	/* ÏÔÊ¾ÑÌÎíÅ¨¶È */
-    sprintf(gasBuf, "ÑÌÎíÅ¨¶È: %.2f PPM", ppm);
+	/* æ˜¾ç¤ºçƒŸé›¾æµ“åº¦ */
+    sprintf(gasBuf, "çƒŸé›¾æµ“åº¦: %.2f PPM", ppm);
     ST7789_ShowString(20, 78, BLACK, ppm > MQ2_PPM_ALARM_THRESHOLD ? RED : GREEN, gasBuf);
 	
-	/* ÏÔÊ¾×´Ì¬ĞÅÏ¢ºÍ²Ù×÷ÌáÊ¾ */
+	/* æ˜¾ç¤ºçŠ¶æ€ä¿¡æ¯å’Œæ“ä½œæç¤º */
     char statusMsg[40];
-    sprintf(statusMsg, "ÑÌÎí×´Ì¬: %s", ppm > MQ2_PPM_ALARM_THRESHOLD ? "Å¨¶È¹ı¸ß!" : "Å¨¶ÈÕı³£");
+    sprintf(statusMsg, "çƒŸé›¾çŠ¶æ€: %s", ppm > MQ2_PPM_ALARM_THRESHOLD ? "æµ“åº¦è¿‡é«˜!" : "æµ“åº¦æ­£å¸¸");
     ST7789_ShowString(20, 94, BLACK, ppm > MQ2_PPM_ALARM_THRESHOLD ? RED : GREEN, statusMsg);
 }
 
@@ -298,10 +298,10 @@ void DisplayMenuCloud(void)
 
 
 /**
-  * @brief  ³õÊ¼»¯²Ëµ¥ÏµÍ³
+  * @brief  åˆå§‹åŒ–èœå•ç³»ç»Ÿ
   * @param  None
   * @retval None
-  * @note   ÉèÖÃÄ¬ÈÏ²Ëµ¥ÎªÖ÷²Ëµ¥£¬³õÊ¼»¯¸÷²Ëµ¥×´Ì¬±äÁ¿
+  * @note   è®¾ç½®é»˜è®¤èœå•ä¸ºä¸»èœå•ï¼Œåˆå§‹åŒ–å„èœå•çŠ¶æ€å˜é‡
   */
 void Menu_Init(void) 
 {
@@ -315,7 +315,7 @@ void Menu_Init(void)
 }
 
 /**
-  * @brief  Ë¢ĞÂµ±Ç°²Ëµ¥½çÃæ
+  * @brief  åˆ·æ–°å½“å‰èœå•ç•Œé¢
   * @param  None
   * @retval None
   */
@@ -348,17 +348,17 @@ void Refresh_Current_Menu(void)
 }
 
 /**
-  * @brief  ²Ëµ¥¸üĞÂ´¦Àíº¯Êı£º¸ù¾İµ±Ç°²Ëµ¥×´Ì¬´¦Àí°´¼üÊÂ¼ş
-  * @param  key - °´¼üÊäÈëÖµ£¨KEY_NONE/KEY1_PRESSµÈ°´¼üÊÂ¼ş£©
+  * @brief  èœå•æ›´æ–°å¤„ç†å‡½æ•°ï¼šæ ¹æ®å½“å‰èœå•çŠ¶æ€å¤„ç†æŒ‰é”®äº‹ä»¶
+  * @param  key - æŒ‰é”®è¾“å…¥å€¼ï¼ˆKEY_NONE/KEY1_PRESSç­‰æŒ‰é”®äº‹ä»¶ï¼‰
   * @retval None
-  * @note   ÕâÊÇÒ»¸ö×´Ì¬»úÊµÏÖµÄ¶à¼¶²Ëµ¥´¦Àíº¯Êı£¬¸ù¾İµ±Ç°²Ëµ¥×´Ì¬ºÍ°´¼üÊäÈë£º
-  *         1. ÔÚÖ÷²Ëµ¥ÖĞ£ºKEY1ÇĞ»»Ñ¡Ïî£¬KEY2È·ÈÏ½øÈëÏÂ¼¶²Ëµ¥
-  *         2. ÔÚ±¾µØ¿ØÖÆ²Ëµ¥£ºKEY1ÇĞ»»Ñ¡Ïî£¬KEY2È·ÈÏÑ¡Ôñ£¬KEY3·µ»ØÖ÷²Ëµ¥
-  *         3. ÔÚË¢¿¨×´Ì¬²Ëµ¥£ºKEY1¿ªÃÅ²Ù×÷£¬KEY2¹ØÃÅ²Ù×÷£¬KEY3·µ»Ø
-  *         4. ÔÚµÆ¹â¿ØÖÆ²Ëµ¥£ºKEY1¿ØÖÆLED1£¬KEY2¿ØÖÆLED2£¬KEY3·µ»Ø
-  *         5. ÔÚ´°Á±¿ØÖÆ²Ëµ¥£ºKEY1ÇĞ»»Ñ¡Ïî£¬KEY2Ö´ĞĞÑ¡Ïî£¬KEY3·µ»Ø£¬KEY4½ô¼±Í£Ö¹
-  *         6. ÔÚ»·¾³¼à²â²Ëµ¥£ºKEY3·µ»Ø£¬ÆäËû°´¼üÇ¿ÖÆË¢ĞÂÊı¾İ
-  *         7. ÔÚ°Í·¨ÔÆ²Ëµ¥£ºKEY3·µ»ØÖ÷²Ëµ¥
+  * @note   è¿™æ˜¯ä¸€ä¸ªçŠ¶æ€æœºå®ç°çš„å¤šçº§èœå•å¤„ç†å‡½æ•°ï¼Œæ ¹æ®å½“å‰èœå•çŠ¶æ€å’ŒæŒ‰é”®è¾“å…¥ï¼š
+  *         1. åœ¨ä¸»èœå•ä¸­ï¼šKEY1åˆ‡æ¢é€‰é¡¹ï¼ŒKEY2ç¡®è®¤è¿›å…¥ä¸‹çº§èœå•
+  *         2. åœ¨æœ¬åœ°æ§åˆ¶èœå•ï¼šKEY1åˆ‡æ¢é€‰é¡¹ï¼ŒKEY2ç¡®è®¤é€‰æ‹©ï¼ŒKEY3è¿”å›ä¸»èœå•
+  *         3. åœ¨åˆ·å¡çŠ¶æ€èœå•ï¼šKEY1å¼€é—¨æ“ä½œï¼ŒKEY2å…³é—¨æ“ä½œï¼ŒKEY3è¿”å›
+  *         4. åœ¨ç¯å…‰æ§åˆ¶èœå•ï¼šKEY1æ§åˆ¶LED1ï¼ŒKEY2æ§åˆ¶LED2ï¼ŒKEY3è¿”å›
+  *         5. åœ¨çª—å¸˜æ§åˆ¶èœå•ï¼šKEY1åˆ‡æ¢é€‰é¡¹ï¼ŒKEY2æ‰§è¡Œé€‰é¡¹ï¼ŒKEY3è¿”å›ï¼ŒKEY4ç´§æ€¥åœæ­¢
+  *         6. åœ¨ç¯å¢ƒç›‘æµ‹èœå•ï¼šKEY3è¿”å›ï¼Œå…¶ä»–æŒ‰é”®å¼ºåˆ¶åˆ·æ–°æ•°æ®
+  *         7. åœ¨å·´æ³•äº‘èœå•ï¼šKEY3è¿”å›ä¸»èœå•
   */
 void Menu_Update(uint8_t key) 
 {
@@ -367,17 +367,17 @@ void Menu_Update(uint8_t key)
     
     switch(currentMenu) 
 	{
-		/********************************** Ö÷²Ëµ¥ **********************************/
+		/********************************** ä¸»èœå• **********************************/
         case MENU_MAIN:  
             if(key == KEY1_PRESS) 
 			{  
-				// ÏÂÒ»Ìõ
+				// ä¸‹ä¸€æ¡
                 currentSelection = (currentSelection + 1) % 2;
                 DisplayMenuMain();
             } 
             else if(key == KEY2_PRESS) 
 			{  
-				// È·ÈÏ
+				// ç¡®è®¤
                 if(currentSelection == 0) 
 				{
                     currentMenu = MENU_LOCAL;
@@ -391,32 +391,32 @@ void Menu_Update(uint8_t key)
             }
             break;
             
-		/******************************** ±¾µØ¿ØÖÆ²Ëµ¥ ********************************/
+		/******************************** æœ¬åœ°æ§åˆ¶èœå• ********************************/
         case MENU_LOCAL:
             if(key == KEY1_PRESS) 
 			{  
-				// ÏÂÒ»Ìõ
+				// ä¸‹ä¸€æ¡
                 currentSelection = (currentSelection + 1) % 4;
                 DisplayMenuLocal();
             } 
             else if(key == KEY2_PRESS) 
 			{  
-				// È·ÈÏ
+				// ç¡®è®¤
                 switch(currentSelection) 
 				{
-                    case 0:  // Ë¢¿¨¿ªÃÅ
+                    case 0:  // åˆ·å¡å¼€é—¨
                         currentMenu = MENU_CARD_STATUS;
                         DisplayMenuCardStatus();
                         break;
-                    case 1:  // ¿ªµÆ
+                    case 1:  // å¼€ç¯
                         currentMenu = MENU_LIGHT;
                         DisplayMenuLight();
                         break;
-                    case 2:  // ¿ª¹Ø´°Á±
+                    case 2:  // å¼€å…³çª—å¸˜
                         currentMenu = MENU_CURTAIN;
                         DisplayMenuCurtain();
                         break;
-                    case 3:  // ÎÂÊª¶ÈºÍ»ğÇé
+                    case 3:  // æ¸©æ¹¿åº¦å’Œç«æƒ…
                         currentMenu = MENU_TEMP_HUM;
                         DisplayMenuTempHum();
                         break;
@@ -424,13 +424,13 @@ void Menu_Update(uint8_t key)
             } 
             else if(key == KEY3_PRESS) 
 			{  
-				/* ·µ»Ø */
+				/* è¿”å› */
                 currentMenu = MENU_MAIN;
                 DisplayMenuMain();
             }
             break;
          
-		/******************************** Ë¢¿¨×´Ì¬²Ëµ¥ ********************************/
+		/******************************** åˆ·å¡çŠ¶æ€èœå• ********************************/
 		extern void Increase_PWM_Angle(void);
 		extern void Decrease_PWM_Angle(void);	
 		extern float duty_circle_A;
@@ -440,29 +440,29 @@ void Menu_Update(uint8_t key)
 			{
 				if(GetCardDetectStatus() == CARD_DETECTED) 
 				{
-					/* ¿ªÃÅ²Ù×÷ */
-					Increase_PWM_Angle();  // µ÷ÓÃÔö¼Ó½Ç¶Èº¯Êı
+					/* å¼€é—¨æ“ä½œ */
+					Increase_PWM_Angle();  // è°ƒç”¨å¢åŠ è§’åº¦å‡½æ•°
                     
-                    /* ÏÔÊ¾µ±Ç°½Ç¶È */
+                    /* æ˜¾ç¤ºå½“å‰è§’åº¦ */
                     char angleMsg[32];
-                    snprintf(angleMsg, sizeof(angleMsg), "½Ç¶È: %.1f¡ã", duty_circle_A);
+                    snprintf(angleMsg, sizeof(angleMsg), "è§’åº¦: %.1fÂ°", duty_circle_A);
                     ST7789_ShowString(140, 120, GREEN, BLACK, angleMsg);
 					
-					ST7789_ShowString(20, 120, GREEN, BLACK, "¿ªÃÅÖĞing");
+					ST7789_ShowString(20, 120, GREEN, BLACK, "å¼€é—¨ä¸­ing");
 				}
 				else 
 				{
-					ST7789_ShowString(20, 120, RED, BLACK, "Î´ÕÒµ½¿¨!");
+					ST7789_ShowString(20, 120, RED, BLACK, "æœªæ‰¾åˆ°å¡!");
 				}
 			} 
 			else if(key == KEY2_PRESS) 
 			{  
-				/* ¹ØÃÅ²Ù×÷£ºÔö¼Ó½Ç¶È */
-                Decrease_PWM_Angle();  // µ÷ÓÃ¼õÉÙ½Ç¶Èº¯Êı
-                ST7789_ShowString(20, 120, GREEN, BLACK, "¹ØÃÅÖĞing");
-                /* ÏÔÊ¾µ±Ç°½Ç¶È */
+				/* å…³é—¨æ“ä½œï¼šå¢åŠ è§’åº¦ */
+                Decrease_PWM_Angle();  // è°ƒç”¨å‡å°‘è§’åº¦å‡½æ•°
+                ST7789_ShowString(20, 120, GREEN, BLACK, "å…³é—¨ä¸­ing");
+                /* æ˜¾ç¤ºå½“å‰è§’åº¦ */
                 char angleMsg[32];
-                snprintf(angleMsg, sizeof(angleMsg), "½Ç¶È: %.1f¡ã", duty_circle_A);
+                snprintf(angleMsg, sizeof(angleMsg), "è§’åº¦: %.1fÂ°", duty_circle_A);
                 ST7789_ShowString(140, 120, GREEN, BLACK, angleMsg);
 			}
 			else if(key == KEY3_PRESS) 
@@ -478,7 +478,7 @@ void Menu_Update(uint8_t key)
 				return;
 			break;
         
-		/******************************** µÆ¹â¿ØÖÆ²Ëµ¥ ********************************/
+		/******************************** ç¯å…‰æ§åˆ¶èœå• ********************************/
         case MENU_LIGHT:
             if(key == KEY1_PRESS) 
 			{
@@ -494,7 +494,7 @@ void Menu_Update(uint8_t key)
             } 
             else if(key == KEY3_PRESS) 
 			{  
-				/* ·µ»Ø */
+				/* è¿”å› */
                 currentMenu = MENU_LOCAL;
                 DisplayMenuLocal();
 				LED1_Ctrl(LED_Close);
@@ -502,40 +502,40 @@ void Menu_Update(uint8_t key)
             }
             break;
             
-		/******************************** ´°Á±¿ØÖÆ²Ëµ¥ ********************************/
+		/******************************** çª—å¸˜æ§åˆ¶èœå• ********************************/
         case MENU_CURTAIN:
             if(key == KEY1_PRESS) 
             {  
-                /* ÇĞ»»µ½ÏÂÒ»¸öÑ¡Ïî */
+                /* åˆ‡æ¢åˆ°ä¸‹ä¸€ä¸ªé€‰é¡¹ */
                 curtainSelection = (curtainSelection + 1) % 3;
                 DisplayMenuCurtain();
             } 
             else if(key == KEY2_PRESS) 
             {
-                /* Ö´ĞĞµ±Ç°Ñ¡ÖĞÑ¡ÏîµÄ²Ù×÷ */
+                /* æ‰§è¡Œå½“å‰é€‰ä¸­é€‰é¡¹çš„æ“ä½œ */
                 switch(curtainSelection) 
                 {
                     case 0: 
-						/* ¹Ø±Õ´°Á± */
+						/* å…³é—­çª—å¸˜ */
 						Motor_SetSpeed(49, 1);
-						ST7789_ShowString(20, 100, GREEN, BLACK, "¹Ø±Õing...");
+						ST7789_ShowString(20, 100, GREEN, BLACK, "å…³é—­ing...");
                         break;
                     case 1: 
-						/* ¿ªÆô´°Á± */
+						/* å¼€å¯çª—å¸˜ */
 						Motor_SetSpeed(49, 0);
-						ST7789_ShowString(20, 100, GREEN, BLACK, "¿ªÆôing...");
+						ST7789_ShowString(20, 100, GREEN, BLACK, "å¼€å¯ing...");
                         break;
                     case 2: 
-                        /* Ö´ĞĞÍ£Ö¹ */
+                        /* æ‰§è¡Œåœæ­¢ */
 						Motor_Stop();
-						ST7789_ShowString(20, 100, YELLOW, BLACK, "ÒÑÔİÍ£");
+						ST7789_ShowString(20, 100, YELLOW, BLACK, "å·²æš‚åœ");
                         break;
                 }
             }
 			
             else if(key == KEY3_PRESS) 
             {  
-                /* ·µ»Ø */
+                /* è¿”å› */
 				Motor_Stop(); 
 				ST7789_ShowString(20, 100, WHITE, BLACK, "                 ");
                 currentMenu = MENU_LOCAL;
@@ -544,35 +544,35 @@ void Menu_Update(uint8_t key)
 			
             else if(key == KEY4_PRESS) 
             {  
-                /* Í£Ö¹ */
+                /* åœæ­¢ */
 				Motor_Stop();
-				ST7789_ShowString(20, 100, YELLOW, BLACK, "ÒÑÔİÍ£");
-                /* Ö´ĞĞÍ£Ö¹ */
+				ST7789_ShowString(20, 100, YELLOW, BLACK, "å·²æš‚åœ");
+                /* æ‰§è¡Œåœæ­¢ */
                 DisplayMenuCurtain();
             }
             break;
 		
-		/******************************** ÎÂÊª¶ÈÏÔÊ¾²Ëµ¥ ********************************/
+		/******************************** æ¸©æ¹¿åº¦æ˜¾ç¤ºèœå• ********************************/
         case MENU_TEMP_HUM:
             if(key == KEY3_PRESS) 
 			{  
-				/* ·µ»Ø */
+				/* è¿”å› */
                 currentMenu = MENU_LOCAL;
                 DisplayMenuLocal();
             }
-            /* Èç¹û°´ÏÂÆäËû¼ü£¨ÈçKEY1/KEY2£©Ç¿ÖÆË¢ĞÂÊı¾İ */
+            /* å¦‚æœæŒ‰ä¸‹å…¶ä»–é”®ï¼ˆå¦‚KEY1/KEY2ï¼‰å¼ºåˆ¶åˆ·æ–°æ•°æ® */
 			else if(key != KEY_NONE)
 			{
-				DisplayMenuTempHum(); // Ë¢ĞÂÏÔÊ¾
+				DisplayMenuTempHum(); // åˆ·æ–°æ˜¾ç¤º
 			}
             break;
             
-		/******************************** °Í·¨ÔÆÆ½Ì¨²Ëµ¥ ********************************/
+		/******************************** å·´æ³•äº‘å¹³å°èœå• ********************************/
         case MENU_CLOUD:
-			/* °Í·¨ÔÆÆ½Ì¨ */
+			/* å·´æ³•äº‘å¹³å° */
             if(key == KEY3_PRESS) 
 			{  
-				/* ·µ»Ø */
+				/* è¿”å› */
                 currentMenu = MENU_MAIN;
                 DisplayMenuMain();
             }
